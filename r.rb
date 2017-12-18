@@ -21,7 +21,7 @@ class R < Formula
   depends_on "openblas" => :optional
   depends_on :java => :optional
 
-  ## SRF
+  ## SRF - Add additional R capabilities (comment out if undesired)
   depends_on :tex
   depends_on "texinfo"
   depends_on "libtiff"
@@ -60,9 +60,9 @@ class R < Formula
       "--with-lapack",
       "--enable-R-shlib",
       "SED=/usr/bin/sed", # don't remember Homebrew's sed shim,
-      "--with-tcltk",
-      "--with-tcl-config=/System/Library/Frameworks/Tcl.framework/tclConfig.sh",
-      "--with-tk-config=/System/Library/Frameworks/Tk.framework/tkConfig.sh"
+      "--with-tcltk", # SRF - Add tcl-tk support
+      "--with-tcl-config=/System/Library/Frameworks/Tcl.framework/tclConfig.sh", # SRF - Point to system tcl config file ** Requires Command Line tools to be installed **
+      "--with-tk-config=/System/Library/Frameworks/Tk.framework/tkConfig.sh" # SRF - Point to system tk config file ** Requires Command Line tools to be installed **
     ]
 
     if build.with? "openblas"
