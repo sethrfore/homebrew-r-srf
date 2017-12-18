@@ -22,13 +22,13 @@ class R < Formula
   depends_on :java => :optional
 
   ## SRF - Add additional R capabilities (comment out if undesired)
-  depends_on :tex
-  depends_on "texinfo"
-  depends_on "libtiff"
-  depends_on :x11
-  depends_on "cairo"
-  depends_on "icu4c"
-  depends_on "pango"
+  depends_on :x11 # SRF - X11 necessary for tcl-tk since tk.h includes X11 headers. See section A.2.1 Tcl/Tk at < https://cran.r-project.org/doc/manuals/r-release/R-admin.html >
+  # depends_on :tex
+  # depends_on "texinfo"
+  # depends_on "libtiff"
+  # depends_on "cairo"
+  # depends_on "icu4c"
+  # depends_on "pango"
 
 
   # needed to preserve executable permissions on files without shebangs
@@ -47,22 +47,25 @@ class R < Formula
       ENV["ac_cv_have_decl_clock_gettime"] = "no"
     end
 
-	## SRF
-	# Fix cairo detection with Quartz-only cairo
-	inreplace ["configure", "m4/cairo.m4"], "cairo-xlib.h", "cairo.h"
+  ## SRF - Add cairo capability (comment/uncomment corresponding cairo args below as necessary)
+  # Fix cairo detection with Quartz-only cairo
+  # inreplace ["configure", "m4/cairo.m4"], "cairo-xlib.h", "cairo.h"
 
 
     args = [
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
-      "--with-cairo",
+      # "--with-cairo", # SRF - Add cairo support (comment --without-cairo).
+      "--without-cairo", # SRF - No cairo support (comment --with-cairo).
+      "--with-x", # SRF - Add X11 support (comment --without-x). Necessary for tcl-tk support.
+      # "--without-x", # SRF - No X11 support (comment --with-x).
       "--with-aqua",
       "--with-lapack",
       "--enable-R-shlib",
       "SED=/usr/bin/sed", # don't remember Homebrew's sed shim,
-      "--with-tcltk", # SRF - Add tcl-tk support
-      "--with-tcl-config=/System/Library/Frameworks/Tcl.framework/tclConfig.sh", # SRF - Point to system tcl config file ** Requires Command Line tools to be installed **
-      "--with-tk-config=/System/Library/Frameworks/Tk.framework/tkConfig.sh" # SRF - Point to system tk config file ** Requires Command Line tools to be installed **
+      "--with-tcltk", # SRF - Add tcl-tk support.
+      "--with-tcl-config=/System/Library/Frameworks/Tcl.framework/tclConfig.sh", # SRF - Point to system tcl config file (requires Command Line tools to be installed).
+      "--with-tk-config=/System/Library/Frameworks/Tk.framework/tkConfig.sh" # SRF - Point to system tk config file (requires Command Line tools to be installed).
     ]
 
     if build.with? "openblas"
