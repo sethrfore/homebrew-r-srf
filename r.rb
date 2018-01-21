@@ -24,12 +24,11 @@ class R < Formula
 
   ## SRF - Add additional R capabilities (comment out if undesired)
   depends_on :x11 # SRF - X11 necessary for tcl-tk since tk.h includes X11 headers. See section A.2.1 Tcl/Tk at < https://cran.r-project.org/doc/manuals/r-release/R-admin.html >
-  # depends_on :tex
-  # depends_on "texinfo"
-  # depends_on "libtiff"
-  # depends_on "cairo"
-  # depends_on "icu4c"
-  # depends_on "pango"
+  depends_on "texinfo" => :optional
+  depends_on "libtiff" => :optional
+  depends_on "cairo" => :optional
+  depends_on "icu4c" => :optional
+  depends_on "pango" => :optional
 
 
   # needed to preserve executable permissions on files without shebangs
@@ -56,8 +55,6 @@ class R < Formula
     args = [
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
-      # "--with-cairo", # SRF - Add cairo support (comment --without-cairo).
-      "--without-cairo", # SRF - No cairo support (comment --with-cairo).
       "--with-x", # SRF - Add X11 support (comment --without-x). Necessary for tcl-tk support.
       # "--without-x", # SRF - No X11 support (comment --with-x).
       "--with-aqua",
@@ -82,6 +79,13 @@ class R < Formula
     else
       args << "--disable-java"
     end
+
+    if build.with? "cairo"
+      args << "--with-cairo"
+    else
+      args << "--without-cairo"
+    end
+
 
     # Help CRAN packages find gettext and readline
     ["gettext", "readline"].each do |f|
