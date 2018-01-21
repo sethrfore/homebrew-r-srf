@@ -3,32 +3,32 @@ class R < Formula
   homepage "https://www.r-project.org/"
   url "https://cran.rstudio.com/src/base/R-3/R-3.4.3.tar.gz"
   sha256 "7a3cb831de5b4151e1f890113ed207527b7d4b16df9ec6b35e0964170007f426"
+  revision 1
 
   bottle do
-    sha256 "5980c32c37d78545b85a745af26688c4b9b38748086597e9476d19782cab9200" => :high_sierra
-    sha256 "7362e6983438c23dd79cd5461836111da9c404c1b328be87226a0e55102cd070" => :sierra
-    sha256 "c8c3f89cba5a1bbc383ddacfba6b9dcdebe576fa9112dd30bacf390b8f67768a" => :el_capitan
+    sha256 "49f0c4d16ae8ee11cbb06da9d2ed10371e3d1099117f72b0850ab3a47d88c514" => :high_sierra
+    sha256 "d4cb1268d6adeb1ee6be0e85b7f1f257277f3fd9666f3a9ab0e1b24b216ce2ab" => :sierra
+    sha256 "361c2934f40bc20fca7e0db3c25291095155a473c663f64a0b028f9dd7c0940d" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
+  depends_on "gcc"
   depends_on "gettext"
   depends_on "jpeg"
   depends_on "libpng"
   depends_on "pcre"
   depends_on "readline"
   depends_on "xz"
-  depends_on :fortran
   depends_on "openblas" => :optional
   depends_on :java => :optional
 
   ## SRF - Add additional R capabilities (comment out if undesired)
   depends_on :x11 # SRF - X11 necessary for tcl-tk since tk.h includes X11 headers. See section A.2.1 Tcl/Tk at < https://cran.r-project.org/doc/manuals/r-release/R-admin.html >
-  # depends_on :tex
-  # depends_on "texinfo"
-  # depends_on "libtiff"
-  # depends_on "cairo"
-  # depends_on "icu4c"
-  # depends_on "pango"
+  depends_on "texinfo" => :optional
+  depends_on "libtiff" => :optional
+  depends_on "cairo" => :optional
+  depends_on "icu4c" => :optional
+  depends_on "pango" => :optional
 
 
   # needed to preserve executable permissions on files without shebangs
@@ -55,8 +55,6 @@ class R < Formula
     args = [
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
-      # "--with-cairo", # SRF - Add cairo support (comment --without-cairo).
-      "--without-cairo", # SRF - No cairo support (comment --with-cairo).
       "--with-x", # SRF - Add X11 support (comment --without-x). Necessary for tcl-tk support.
       # "--without-x", # SRF - No X11 support (comment --with-x).
       "--with-aqua",
@@ -81,6 +79,13 @@ class R < Formula
     else
       args << "--disable-java"
     end
+
+    if build.with? "cairo"
+      args << "--with-cairo"
+    else
+      args << "--without-cairo"
+    end
+
 
     # Help CRAN packages find gettext and readline
     ["gettext", "readline"].each do |f|
