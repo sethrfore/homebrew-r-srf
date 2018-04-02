@@ -29,7 +29,6 @@ class R < Formula
   depends_on "icu4c" => :optional
   depends_on "pango" => :optional
 
-
   # needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin"
 
@@ -50,12 +49,10 @@ class R < Formula
   # Fix cairo detection with Quartz-only cairo
   # inreplace ["configure", "m4/cairo.m4"], "cairo-xlib.h", "cairo.h"
 
-
     args = [
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
       "--with-x", # SRF - Add X11 support (comment --without-x). Necessary for tcl-tk support.
-      # "--without-x", # SRF - No X11 support (comment --with-x).
       "--with-aqua",
       "--with-lapack",
       "--enable-R-shlib",
@@ -84,7 +81,6 @@ class R < Formula
     else
       args << "--without-cairo"
     end
-
 
     # Help CRAN packages find gettext and readline
     ["gettext", "readline"].each do |f|
