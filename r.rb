@@ -1,17 +1,17 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-3/R-3.4.4.tar.gz"
-  sha256 "b3e97d2fab7256d1c655c4075934725ba1cd7cb9237240a11bb22ccdad960337"
+  url "https://cran.r-project.org/src/base/R-3/R-3.5.0.tar.gz"
+  sha256 "fd1725535e21797d3d9fea8963d99be0ba4c3aecadcf081b43e261458b416870"
 
   bottle do
-    sha256 "0bc44bf3f7de7a7bba6f25d0db2ba5525a032f8119b3bce3ecf03c40812d5c3d" => :high_sierra
-    sha256 "cb8b59f45018cefbfad6147b1b304fd756941ea7b8038187d1292bc42b758b4e" => :sierra
-    sha256 "d0b25446d186207b998248bbb4a30e05882a9d278a2fb12c89eca639a10c08fa" => :el_capitan
+    sha256 "5f925d72acd24d2530fdfed24753009a263517ebd69f7af95c097d9856f2fc0b" => :high_sierra
+    sha256 "038bbe72345839605641a854c505a13b47aaa6bb672501f0635deb358d3215db" => :sierra
+    sha256 "7c81cf90d3b5caf999aaced6dfdd11a56dac0c70353a3c44faf540037e2633cc" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
-  depends_on "gcc"
+  depends_on "gcc" # for gfortran
   depends_on "gettext"
   depends_on "jpeg"
   depends_on "libpng"
@@ -33,9 +33,9 @@ class R < Formula
   skip_clean "lib/R/bin"
 
   resource "gss" do
-    url "https://cloud.r-project.org/src/contrib/gss_2.1-7.tar.gz", :using => :nounzip
-    mirror "https://mirror.las.iastate.edu/CRAN/src/contrib/gss_2.1-7.tar.gz"
-    sha256 "0405bb5e4c4d60b466335e5da07be4f9570045a24aed09e7bc0640e1a00f3adb"
+    url "https://cloud.r-project.org/src/contrib/gss_2.1-8.tar.gz", :using => :nounzip
+    mirror "https://mirror.las.iastate.edu/CRAN/src/contrib/gss_2.1-8.tar.gz"
+    sha256 "176cce8ddd939afb9ec3de6c731d13fbff38bc8f0291cf9c7aa4bf35491084bc"
   end
 
   def install
@@ -56,7 +56,7 @@ class R < Formula
       "--with-aqua",
       "--with-lapack",
       "--enable-R-shlib",
-      "SED=/usr/bin/sed", # don't remember Homebrew's sed shim,
+      "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
       "--with-tcltk", # SRF - Add tcl-tk support.
       "--with-tcl-config=/System/Library/Frameworks/Tcl.framework/tclConfig.sh", # SRF - Point to system tcl config file (requires Command Line tools to be installed).
       "--with-tk-config=/System/Library/Frameworks/Tk.framework/tkConfig.sh" # SRF - Point to system tk config file (requires Command Line tools to be installed).
