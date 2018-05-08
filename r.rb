@@ -26,7 +26,7 @@ class R < Formula
   depends_on :x11 # SRF - X11 necessary for tcl-tk since tk.h includes X11 headers. See section A.2.1 Tcl/Tk at < https://cran.r-project.org/doc/manuals/r-release/R-admin.html >
   depends_on "texinfo" => :optional
   depends_on "libtiff" => :optional
-  depends_on "cairo-x11" => :optional
+  depends_on "sethrfore/r-srf/cairo" => :optional # SRF - Use cairo formula with X11 support
   depends_on "icu4c" => :optional
   depends_on "pango" => :optional
 
@@ -78,7 +78,7 @@ class R < Formula
     end
 
     ## SRF - Add Cairo support
-    if build.with? "cairo-x11"
+    if build.with? "sethrfore/r-srf/cairo"
       args << "--with-cairo"
     else
       args << "--without-cairo"
