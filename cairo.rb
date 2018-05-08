@@ -1,4 +1,4 @@
-class CairoX11 < Formula
+class Cairo < Formula
   desc "Vector graphics library with cross-device output support"
   homepage "https://cairographics.org/"
   url "https://cairographics.org/releases/cairo-1.14.12.tar.xz"
@@ -19,7 +19,7 @@ class CairoX11 < Formula
   end
 
   depends_on "pkg-config" => :build
-  depends_on :x11 => :optional
+  depends_on :x11
   depends_on "freetype"
   depends_on "fontconfig"
   depends_on "libpng"
@@ -34,13 +34,16 @@ class CairoX11 < Formula
       --enable-svg=yes
       --enable-tee=yes
       --enable-quartz-image
+      --enable-xcb=yes
+      --enable-xlib=yes
+      --enable-xlib-xrender=yes
     ]
 
-    if build.with? "x11"
-      args << "--enable-xcb=yes" << "--enable-xlib=yes" << "--enable-xlib-xrender=yes"
-    else
-      args << "--enable-xcb=no" << "--enable-xlib=no" << "--enable-xlib-xrender=no"
-    end
+    # if build.with? "x11"
+    #   args << "--enable-xcb=yes" << "--enable-xlib=yes" << "--enable-xlib-xrender=yes"
+    # else
+    #   args << "--enable-xcb=no" << "--enable-xlib=no" << "--enable-xlib-xrender=no"
+    # end
 
     if build.head?
       system "./autogen.sh", *args
