@@ -1,6 +1,6 @@
 # homebrew-r-srf
 
-Custom hombrew r formula. Tcl-tk support is added by default using the Mac OS system tcl-tk framework (see r.rb formula lines 61-63).  
+Custom hombrew r formula. Tcl-tk support is added by default using the Mac OS system tcl-tk framework (see r.rb formula lines 61-63). The formula also provides optional support for the following dependencies: Cairo, IUC, Java, LibTIFF, OpenBLAS, Pango and TexInfo. 
 
 Operational X11/Xquartz and Mac OS Command Line Tools installations are build requirements. X11/Xquartz is required because the tk.h header file used in [base r tcltk package includes X11 headers](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Tcl_002fTk). Mac OS Command Line Tools must be installed for the appropriate Tcl-tk config files to be available.
 
