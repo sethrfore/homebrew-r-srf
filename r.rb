@@ -4,12 +4,6 @@ class R < Formula
   url "https://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz"
   sha256 "0463bff5eea0f3d93fa071f79c18d0993878fd4f2e18ae6cf22c1639d11457ed"
 
-  bottle do
-    sha256 "e65df345554df730d9a3d90554a4afe345f2023712cddfea2e146496a04c7236" => :high_sierra
-    sha256 "cc9a616bd0981ead6f885015e1e41ae7c057e7c15c1e3d86d4fee7fc736130f2" => :sierra
-    sha256 "c5e9ef1321dfc402102fac4e0343ba1b12131a9c1c21d03e5d316a720d343dba" => :el_capitan
-  end
-
   depends_on "pkg-config" => :build
   depends_on "gcc" # for gfortran
   depends_on "gettext"
