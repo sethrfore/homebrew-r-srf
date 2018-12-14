@@ -83,6 +83,12 @@ class R < Formula
       ENV.append "LDFLAGS", "-L#{Formula[f].opt_lib}"
     end
 
+    ## SRF - Help CRAN packages find icu4c (e.g. rJava)
+    if build.with? "icu4c"
+      ENV.append "CPPFLAGS", "-I#{Formula["icu4c"].opt_include}"
+      ENV.append "LDFLAGS", "-L#{Formula["icu4c"].opt_lib}"
+    end
+
     system "./configure", *args
     system "make"
     ENV.deparallelize do
