@@ -2,9 +2,9 @@
 
 Custom hombrew r formula. Tcl-Tk support is added by default using the Mac OS system Tcl-Tk framework (see r.rb formula lines 61-63). The formula also provides optional support for the following dependencies: Cairo, IUC, Java, LibTIFF, OpenBLAS, Pango and TexInfo. 
 
-Operational X11/Xquartz and Mac OS Command Line Tools installations are build requirements. X11/Xquartz is required because the tk.h header file used in [base r tcltk package includes X11 headers](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Tcl_002fTk). 
+Operational X11/Xquartz and macOS Command Line Tools installations are build requirements. X11/Xquartz is required because the tk.h header file used in [base r tcltk package includes X11 headers](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Tcl_002fTk). 
 
-Mac OS Command Line Tools must be installed for the appropriate Tcl-Tk config files to be available. As from macOS 10.14 (‘Mojave’), an additional step is needed to install the headers in the appropriate locations. From the Terminal run:
+macOS Command Line Tools must be installed for the appropriate Tcl-Tk config files to be available. As from macOS 10.14 (‘Mojave’), an additional step is needed to install the headers in the appropriate locations. From the Terminal run:
 
 `sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /`
 
@@ -14,7 +14,7 @@ In order for cairo support it is necessary to install a version of cairo with X1
 
 # Installation
 
-This modified R formula can be installed as follows.
+When all system dependecies addressed in the previous section have been met, this modified R formula can be installed as follows.
 
 Add the repository to your homebrew
 
