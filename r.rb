@@ -1,8 +1,8 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-3/R-3.5.3.tar.gz"
-  sha256 "2bfa37b7bd709f003d6b8a172ddfb6d03ddd2d672d6096439523039f7a8e678c"
+  url "https://cran.r-project.org/src/base/R-3/R-3.6.0.tar.gz"
+  sha256 "36fcac3e452666158e62459c6fc810adc247c7109ed71c5b6c3ad5fc2bf57509"
 
   depends_on "pkg-config" => :build
   depends_on "gcc" # for gfortran
