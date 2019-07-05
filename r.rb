@@ -21,7 +21,7 @@ class R < Formula
   depends_on "libtiff" => :optional
   depends_on "sethrfore/r-srf/cairo" => :optional # SRF - Cairo must be build with with X11 support. Use brew install sethrfore/r-srf/cairo
   depends_on "icu4c" => :optional
-  depends_on "pango" => :optional
+  # depends_on "pango" => :optional
 
   # needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin"
