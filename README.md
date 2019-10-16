@@ -29,3 +29,10 @@ Compile the modified R formula from source with desired options
 `brew install -s sethrfore/r-srf/r --with-cairo --with-libtiff`
 
 Note: If necessary, remove previous R and cairo installations prior to compiling the modified R formula. Once installed, the compiled dependencies can be checked by invoking R and running `capabilities()`.
+
+# Note for Command Line Tools 11 users
+
+The most recent CLTs update does not include the package to install Tcl-Tk header files in the appropriate locations. This package was always temporary according to Apple. See [this](https://github.com/sethrfore/homebrew-r-srf/issues/17) and [this](https://github.com/sethrfore/homebrew-r-srf/issues/16) issue for a more detailed discussion and possible hacks. 
+
+If you know a better way to adapt this formula to these changes that you've tested and know will work, please post your responses with adequate details to replicate. Thanks. 
+
