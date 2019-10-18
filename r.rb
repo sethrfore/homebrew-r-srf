@@ -52,9 +52,23 @@ class R < Formula
       "--enable-R-shlib",
       "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
       "--with-tcltk", # SRF - Add tcl-tk support.
-      "--with-tcl-config=/System/Library/Frameworks/Tcl.framework/tclConfig.sh", # SRF - Point to system tcl config file (requires Command Line tools to be installed).
-      "--with-tk-config=/System/Library/Frameworks/Tk.framework/tkConfig.sh" # SRF - Point to system tk config file (requires Command Line tools to be installed).
+      "--with-tcl-config=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Tcl.framework/tclConfig.sh", # SRF - Point to system tcl config file (requires Command Line tools to be installed).
+      "--with-tk-config=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Tk.framework/tkConfig.sh", # SRF - Point to system tk config file (requires Command Line tools to be installed).
+
     ]
+
+    ## SRF - Help Tcl-Tk find header files 
+    ## Before installing this R fomula, running the following commands in a terminal window will locate the relevant tcl-tk config files which are edited using `sed` to point to the correct header files. Specifically, in the relevant config files, `-iwithsysroot ` is replaced for TCL_INCLUDE_SPEC/TK_INCLUDE_SPEC variables with the hard path to which it would point if recognized, namely /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk.
+    ## The `sed` command creates a backup of the unedited original file with -ORIG appended to the filename eg, tclConfig.sh-ORIG
+    
+    ## It is necessary to edit tclConfig.sh and tkConfig.sh files prior to installing the formula in order to work
+    ## This is an example only! Use at your own risk...
+
+    # find '/Library/Developer/CommandLineTools' -type f -name "tclConfig.sh"
+    # find '/Library/Developer/CommandLineTools' -type f -name "tkConfig.sh"
+    # sudo sed -i '-ORIG' 's|-iwithsysroot |-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk|g' /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Tcl.framework/Versions/8.5/tclConfig.sh
+    # sudo sed -i '-ORIG' 's|-iwithsysroot |-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk|g' /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/tkConfig.sh
+
 
     if build.with? "openblas"
       args << "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas"
