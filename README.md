@@ -4,9 +4,15 @@ Custom hombrew r formula. Tcl-Tk support is added by default using the Mac OS sy
 
 Operational X11/Xquartz and macOS Command Line Tools installations are build requirements. X11/Xquartz is required because the tk.h header file used in [base r tcltk package includes X11 headers](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Tcl_002fTk). 
 
-macOS Command Line Tools must be installed for the appropriate Tcl-Tk config files to be available. As from macOS 10.14 (‘Mojave’), an additional step is needed to install the headers in the appropriate locations. From the Terminal run:
+macOS Command Line Tools must be installed for the appropriate Tcl-Tk config files to be available. 
+
+# macOS 10.14 (‘Mojave’) Xcode/CLTs 10 users
+For macOS 10.14 (‘Mojave’)and Xcode/CLTs 10 users, an additional step is needed to install the headers in the appropriate locations. From the Terminal run:
 
 `sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /`
+
+# macOS 10.15 (‘Catalina’) Xcode/CLTs 11 users
+For macOS 10.15 (‘Catalina’) and Xcode/CLTs 11 users, the installer package referenced above is no longer available and other steps are required to obtain Tcl-Tk functionality. As of now, I haven't found a seamless way to incorporate Tcl-Tk that does not require editing some system files. There is an R formula available in the dev-tcltk branch of this repo that provides Tcl-Tk functionality but requires some manual file editing prior to installation. See the formula code for instructions. For background and details on current Catalina/Tcl-Tk issues see [this](https://github.com/sethrfore/homebrew-r-srf/issues/17) and [this](https://github.com/sethrfore/homebrew-r-srf/issues/16). 
 
 Consult the [R-dev installation manual](https://cran.r-project.org/doc/manuals/r-devel/R-admin.html#macOS) for more detailed information.
 
@@ -30,9 +36,6 @@ Compile the modified R formula from source with desired options
 
 Note: If necessary, remove previous R and cairo installations prior to compiling the modified R formula. Once installed, the compiled dependencies can be checked by invoking R and running `capabilities()`.
 
-# Note for Command Line Tools 11 users
+# Note for R Developers
 
-The most recent CLTs update does not include the package to install Tcl-Tk header files in the appropriate locations. This package was always temporary according to Apple. See [this](https://github.com/sethrfore/homebrew-r-srf/issues/17) and [this](https://github.com/sethrfore/homebrew-r-srf/issues/16) issue for a more detailed discussion and possible hacks. 
-
-If you know a better way to adapt this formula to these changes that you've tested and know will work, please post your responses with adequate details to replicate. Thanks. 
-
+I am open to suggestions on how to improve the functionality of this formula. I am not a programming expert and welcome any tested solutions that enhance the functionality of this formula, specifically with reference to issues related to changes in recent Xcode and CLT deployments. 
