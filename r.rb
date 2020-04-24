@@ -1,15 +1,15 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cloud.r-project.org/src/base/R-3/R-3.6.3.tar.gz"
-  sha256 "89302990d8e8add536e12125ec591d6951022cf8475861b3690bc8bf1cefaa8f"
+  url "https://cloud.r-project.org/src/base/R-4/R-4.0.0.tar.gz"
+  sha256 "06beb0291b569978484eb0dcb5d2339665ec745737bdfb4e873e7a5a75492940"
 
   depends_on "pkg-config" => :build
   depends_on "gcc" # for gfortran
   depends_on "gettext"
   depends_on "jpeg"
   depends_on "libpng"
-  depends_on "pcre"
+  depends_on "pcre2"
   depends_on "readline"
   depends_on "xz"
   depends_on "openblas" => :optional
