@@ -4,19 +4,21 @@ Custom hombrew r formula. Tcl-Tk support is added by default using the Mac OS sy
 
 Operational X11/Xquartz and macOS Command Line Tools installations are build requirements. X11/Xquartz is required because the tk.h header file used in [base r tcltk package includes X11 headers](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Tcl_002fTk). 
 
-macOS Command Line Tools must be installed for the appropriate Tcl-Tk config files to be available. 
+On macOS, Xcode must be installed for the appropriate Tcl-Tk config files to be available. 
 
 # macOS 10.14 (‘Mojave’) Xcode/CLTs 10 users
 For macOS 10.14 (‘Mojave’)and Xcode/CLTs 10 users, an additional step is needed to install the headers in the appropriate locations. From the Terminal run:
 
 `sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /`
 
-# macOS 10.15 (‘Catalina’) Xcode/CLTs 11 users
-For macOS 10.15 (‘Catalina’) and Xcode/CLTs 11 users, the installer package referenced above is no longer available and other steps are required to obtain Tcl-Tk functionality. As of now, I haven't found a seamless way to incorporate Tcl-Tk that does not require editing some system files. There is an R formula available in the dev-tcltk branch of this repo that provides Tcl-Tk functionality but requires some manual file editing prior to installation. See the formula code for instructions. For background and details on current Catalina/Tcl-Tk issues see [this](https://github.com/sethrfore/homebrew-r-srf/issues/17) and [this](https://github.com/sethrfore/homebrew-r-srf/issues/16). 
+# Tcl-tk and macOS 10.15 (‘Catalina’) Xcode/CLTs 11 users
+Former issues obtaining R tcl-tk functionality appear to have been [resolved](https://github.com/sethrfore/homebrew-r-srf/commit/ad620a62364172971defc685e1b67e2e68b0375c) (thanks to yukio-takeuchi). If problems arise, raise a new issue, provide a detailed description of errors and I'll do my best to address them.
 
-Consult the [R-dev installation manual](https://cran.r-project.org/doc/manuals/r-devel/R-admin.html#macOS) for more detailed information.
+# bzip2 and Xcode/CLTs 12.0 users
+For those running Xcode/CLT 12.0 and are experienceing issues pertaining to missing bzip2 headers, install the r formula from the dev-bzip2 branch. This is a temporary patch and will go away. All users with Xcode/CLT 12.1 installed should install from the master formula. To see what Xcode/CLT version you have, run `brew config`.
 
-In order for cairo support it is necessary to install a version of cairo with X11 headers. Since the Homebrew core cairo formula no longer supports the `--with-x11` option, a custom cairo formula has been made available in this repository that will support R with cairo device capabilities. If this option is desired and you have a previously installed Homebrew version of cairo, reinstall  using the formula provided here `brew rm cairo && brew install -s sethrfore/r-srf/cairo`. Otherwise `brew install -s sethrfore/r-srf/cairo` should be sufficient. This may neccesitate reinstallation of other formulae depnding on cairo. 
+# Cairo
+In order for cairo support it is necessary to install a version of cairo with X11 headers. Since the Homebrew core cairo formula no longer supports the `--with-x11` option, a custom cairo formula has been made available in this repository that will support R with cairo device capabilities. If this option is desired and you have a previously installed Homebrew version of cairo, reinstall  using the formula provided here `brew rm cairo && brew install -s sethrfore/r-srf/cairo`. Otherwise `brew install -s sethrfore/r-srf/cairo` should be sufficient. This may neccesitate reinstallation of other formulae depending on cairo. 
 
 # Installation
 
