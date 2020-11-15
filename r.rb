@@ -41,7 +41,7 @@ class R < Formula
     end
 
     ## YT - enable tcl-tk support using system headers
-    if MacOS.version == "10.15" # At least these changes are needed for catalina
+    if MacOS.version == "10.15" || MacOS.version == "11.0" # This seems to work for Catalina and Big Sur
       ## YT - Set up some  environment variables and over-write some variables defined in tclConfig.sh and tkConfig.sh 
       ENV["TCL_INCLUDE_SPEC"] = "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework/Versions/8.5/Headers"
       ENV["TK_INCLUDE_SPEC"] = "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
