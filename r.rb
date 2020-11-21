@@ -74,7 +74,7 @@ class R < Formula
 
     if build.with? "openblas"
       args << "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas"
-      ENV.append "LDFLAGS", "-L#{Formula["openblas"].opt_lib}"
+      ENV.append "LDFLAGS", "-L#{Formula["openblas"].opt_lib} -lopenblas"
     else
       args << "--with-blas=-framework Accelerate"
       ENV.append_to_cflags "-D__ACCELERATE__" if ENV.compiler != :clang
