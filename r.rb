@@ -15,7 +15,7 @@ class R < Formula
   depends_on "xz"
 
   ## SRF - Add additional R capabilities (comment out if undesired)
-  depends_on :java => :optional
+  depends_on "openjdk" => :optional
   depends_on :x11 # SRF - X11 necessary for tcl-tk since tk.h includes X11 headers. See section A.2.1 Tcl/Tk at < https://cran.r-project.org/doc/manuals/r-release/R-admin.html >
   depends_on "texinfo" => :optional
   depends_on "libtiff" => :optional
@@ -80,7 +80,7 @@ class R < Formula
       ENV.append_to_cflags "-D__ACCELERATE__" if ENV.compiler != :clang
     end
 
-    if build.with? "java"
+    if build.with? "openjdk"
       args << "--enable-java"
     else
       args << "--disable-java"
