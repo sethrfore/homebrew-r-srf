@@ -19,13 +19,21 @@ class Cairo < Formula
   end
 
   depends_on "pkg-config" => :build
-  depends_on :x11
+  # depends_on :x11
+  depends_on "libx11"
+  depends_on "libxcb"
+  depends_on "libxt"
+  depends_on "libxext"
+  depends_on "libxrender"
+
   depends_on "fontconfig"
   depends_on "freetype"
   depends_on "glib"
   depends_on "libpng"
   depends_on "lzo"
   depends_on "pixman"
+
+  uses_from_macos "zlib"
 
   def install
     args = %W[
