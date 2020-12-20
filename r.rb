@@ -22,6 +22,7 @@ class R < Formula
   depends_on "libxt"
   depends_on "libxext"
   depends_on "libxmu"
+  depends_on "sethrfore/extras/tcl-tk-x11"
   ## - Cairo must be build with with X11 support. Use brew install sethrfore/r-srf/cairo
   depends_on "sethrfore/r-srf/cairo" => :optional 
   depends_on "openblas" => :optional
@@ -42,22 +43,12 @@ class R < Formula
       ENV["ac_cv_have_decl_clock_gettime"] = "no"
     end
 
-    ## YT - enable tcl-tk support using system headers
-    if MacOS.version >= "10.15" 
-      ## YT - Set up some  environment variables and over-write some variables defined in tclConfig.sh and tkConfig.sh 
-      ENV["TCL_INCLUDE_SPEC"] = "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework/Versions/8.5/Headers"
-      ENV["TK_INCLUDE_SPEC"] = "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
-      ENV["TCLTK_CPPFLAGS"] = "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework/Versions/8.5/Headers \
-                -I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
-      ENV["TCLTK_LIBS"] = "-F#{MacOS.sdk_path}/System/Library/Frameworks -framework Tk \
-               -F#{MacOS.sdk_path}/System/Library/Frameworks -framework Tcl"
-    end
+    ## SRF - Necessary for tcltk
+    # ENV.append "LDFLAGS", "-L/usr/local/opt/tcl-tk-x11/lib"
+    # ENV.append "CPPFLAGS","-I/usr/local/opt/tcl-tk-x11/include"    
 
     ## SRF - Add Tex to path, uncomment if mactex is installed and desired
     # ENV.append_path "PATH", "/Library/TeX/texbin"
-
-    ## YT - If homebrew's tcl-tk is to be used, this line should be uncommented
-    #tcl_lib = Formula["tcl-tk"].opt_lib
     
     args = [
       "--prefix=#{prefix}",
@@ -69,10 +60,8 @@ class R < Formula
       "--enable-R-shlib",
       "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
       "--with-tcltk", # SRF - Add tcl-tk support.
-      "--with-tcl-config=#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework/tclConfig.sh",
-      "--with-tk-config=#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/tkConfig.sh",
-      #"--with-tcl-config=#{tcl_lib}/tclConfig.sh", # YT - If homebrew's tcl-tk is to be used, this line should be uncommented
-      #"--with-tk-config=#{tcl_lib}/tkConfig.sh" # YT - If homebrew's tcl-tk is to be used, this line should be uncommented
+      "--with-tcl-config=/usr/local/opt/tcl-tk-x11/lib/tclConfig.sh",
+      "--with-tk-config=/usr/local/opt/tcl-tk-x11/lib/tkConfig.sh",
     ]
     
     ## SRF - Add supporting flags for optional packages
@@ -106,6 +95,7 @@ class R < Formula
       ENV.append "CPPFLAGS", "-I#{Formula[f].opt_include}"
       ENV.append "LDFLAGS", "-L#{Formula[f].opt_lib}"
     end
+    
 
     system "./configure", *args
     system "make"
