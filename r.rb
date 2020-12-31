@@ -58,6 +58,10 @@ class R < Formula
 
     ## YT - If homebrew's tcl-tk is to be used, this line should be uncommented
     #tcl_lib = Formula["tcl-tk"].opt_lib
+
+    # BLAS detection fails with Xcode 12 due to missing prototype
+    # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
+    ENV.append "CFLAGS", "-Wno-implicit-function-declaration"    
     
     args = [
       "--prefix=#{prefix}",
