@@ -22,16 +22,17 @@ class R < Formula
   depends_on "libxt"
   depends_on "libxext"
   depends_on "libxmu"
-  depends_on "sethrfore/extras/tcl-tk-x11"
+  depends_on "tcl-tk"
   ## - Cairo must be build with with X11 support. Use brew install sethrfore/r-srf/cairo
   depends_on "sethrfore/r-srf/cairo" => :optional 
+  # depends_on "cairo" => :optional 
   depends_on "openblas" => :optional
   depends_on "openjdk" => :optional
   depends_on "texinfo" => :optional
   depends_on "libtiff" => :optional
   depends_on "icu4c" => :optional
   # depends_on "pango" => :optional
-  # depends_on "tcl-tk"
+
 
   ## Needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin", "lib/R/doc"
@@ -48,20 +49,27 @@ class R < Formula
     # ENV.append "CPPFLAGS","-I/usr/local/opt/tcl-tk-x11/include"    
 
     ## SRF - Add Tex to path, uncomment if mactex is installed and desired
-    # ENV.append_path "PATH", "/Library/TeX/texbin"
+    ENV.append_path "PATH", "/Library/TeX/texbin"
+
+    # BLAS detection fails with Xcode 12 due to missing prototype
+    # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
+    ENV.append "CFLAGS", "-Wno-implicit-function-declaration"
     
     args = [
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
-      "--with-x", # SRF - Add X11 support (comment --without-x). Necessary for tcl-tk support.
-      #"--without-x", # YT - If Homebrew's tcl-tk is to be used, '--with-x' cause an error.
+      # "--with-x", # SRF - Add X11 support (comment --without-x). Necessary for tcl-tk support.
+      "--without-x", # YT - If Homebrew's tcl-tk is to be used, '--with-x' cause an error.
+      "--with-cairo",
       "--with-aqua",
       "--with-lapack",
       "--enable-R-shlib",
       "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
       "--with-tcltk", # SRF - Add tcl-tk support.
-      "--with-tcl-config=/usr/local/opt/tcl-tk-x11/lib/tclConfig.sh",
-      "--with-tk-config=/usr/local/opt/tcl-tk-x11/lib/tkConfig.sh",
+      # "--with-tcl-config=/usr/local/opt/tcl-tk-x11/lib/tclConfig.sh",
+      # "--with-tk-config=/usr/local/opt/tcl-tk-x11/lib/tkConfig.sh",
+      "--with-tcl-config=#{Formula["tcl-tk"].opt_lib}/tclConfig.sh",
+      "--with-tk-config=#{Formula["tcl-tk"].opt_lib}/tkConfig.sh",
     ]
     
     ## SRF - Add supporting flags for optional packages
@@ -138,7 +146,7 @@ class R < Formula
   test do
     assert_equal "[1] 2", shell_output("#{bin}/Rscript -e 'print(1+1)'").chomp
     assert_equal ".dylib", shell_output("#{bin}/R CMD config DYLIB_EXT").chomp
-    # assert_equal "[1] \"aqua\"", shell_output("#{bin}/Rscript -e 'library(tcltk)' -e 'tclvalue(.Tcl(\"tk windowingsystem\"))'").chomp
+    assert_equal "[1] \"aqua\"", shell_output("#{bin}/Rscript -e 'library(tcltk)' -e 'tclvalue(.Tcl(\"tk windowingsystem\"))'").chomp
 
     system bin/"Rscript", "-e", "install.packages('gss', '.', 'https://cloud.r-project.org')"
     assert_predicate testpath/"gss/libs/gss.so", :exist?,
