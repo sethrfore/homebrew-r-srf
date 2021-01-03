@@ -23,7 +23,7 @@ class R < Formula
   depends_on "libxext"
   depends_on "libxmu"
   ## - Cairo must be build with with X11 support. Use brew install sethrfore/r-srf/cairo
-  depends_on "sethrfore/r-srf/cairo" => :optional 
+  depends_on "sethrfore/r-srf/cairo-x11" => :optional 
   depends_on "openblas" => :optional
   depends_on "openjdk" => :optional
   depends_on "texinfo" => :optional
@@ -94,7 +94,7 @@ class R < Formula
       args << "--disable-java"
     end
 
-    if build.with? "cairo"
+    if build.with? "cairo-x11"
       args << "--with-cairo"
     else
       args << "--without-cairo"
