@@ -20,6 +20,8 @@ class CairoX11 < Formula
     depends_on "libtool" => :build
   end
 
+  keg_only :provided_by_macos
+
   depends_on "pkg-config" => :build
   depends_on "fontconfig"
   depends_on "freetype"
