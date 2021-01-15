@@ -25,7 +25,7 @@ class CairoX11 < Formula
   depends_on "pkg-config" => :build
   depends_on "fontconfig"
   depends_on "freetype"
-  depends_on "glib"
+  depends_on "glib" => :optional
   depends_on "libpng"
   depends_on "lzo"
   depends_on "pixman"
@@ -47,14 +47,24 @@ class CairoX11 < Formula
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}
-      --enable-gobject=yes
       --enable-svg=yes
       --enable-tee=yes
-      --enable-quartz-image=yes
-      --enable-xcb=yes
+      --with-x
       --enable-xlib=yes
       --enable-xlib-xrender=yes
+      --enable-xlib-xcb=yes
+      --enable-xcb=yes
+      --enable-quartz=yes
+      --enable-quartz-image=yes
+      --enable-quartz-font=yes
+      --enable-ft=yes
+      --enable-fc=yes
     ]
+
+    if build.with? "glib"
+      args << "--enable-gobject=yes"
+    end
+    
 
     # if build.with? "x11"
     #   args << "--enable-xcb=yes" << "--enable-xlib=yes" << "--enable-xlib-xrender=yes"
