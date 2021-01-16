@@ -20,28 +20,27 @@ class CairoX11 < Formula
     depends_on "libtool" => :build
   end
 
-  keg_only :provided_by_macos
+  keg_only "avoid conflicts with homebrew cairo"
 
   depends_on "pkg-config" => :build
   depends_on "fontconfig"
   depends_on "freetype"
-  # depends_on "glib" => :optional
   depends_on "libpng"
-  depends_on "lzo"
-  depends_on "pixman"
-
-  uses_from_macos "zlib"
-
   depends_on "libx11"
   depends_on "libxcb"
-  depends_on "libxt"
   depends_on "libxext"
   depends_on "libxrender"
+  depends_on "libxt"
+  depends_on "lzo"
+  depends_on "pixman"
+  # depends_on "glib" => :optional
+
+  uses_from_macos "zlib"
 
   patch do
     url "https://gitlab.freedesktop.org/cairo/cairo/-/commit/e22d7212acb454daccc088619ee147af03883974.patch"
     sha256 "363a6018efc52721e2eace8df3aa319c93f3ad765ef7e3ea04e2ddd4ee94d0e1"
-  end  
+  end
 
   def install
     args = %W[
@@ -61,10 +60,7 @@ class CairoX11 < Formula
       --enable-fc=yes
     ]
 
-    # if build.with? "glib"
-    #   args << "--enable-gobject=yes"
-    # end
-    
+    # args << "--enable-gobject=yes" if build.with? "glib"
 
     if build.head?
       ENV["NOCONFIGURE"] = "1"
