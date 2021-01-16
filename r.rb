@@ -5,32 +5,26 @@ class R < Formula
   sha256 "09983a8a78d5fb6bc45d27b1c55f9ba5265f78fa54a55c13ae691f87c5bb9e0d"
 
   depends_on "pkg-config" => :build
+  depends_on "fontconfig"
+  depends_on "freetype"
   depends_on "gcc" # for gfortran
   depends_on "gettext"
   depends_on "jpeg"
   depends_on "libpng"
+  depends_on "libx11"
+  depends_on "libxext"
+  depends_on "libxmu"
+  depends_on "libxt"
   depends_on "pcre2"
   depends_on "readline"
   depends_on "xz"
-
-  ## SRF - Add additional R capabilities (comment out if undesired)
-  ## - X11 necessary for tcl-tk since tk.h includes X11 headers. See section A.2.1 Tcl/Tk at < https://cran.r-project.org/doc/manuals/r-release/R-admin.html >
-  # depends_on :x11
-  depends_on "freetype"
-  depends_on "fontconfig"
-  depends_on "libx11"
-  depends_on "libxt"
-  depends_on "libxext"
-  depends_on "libxmu"
-  ## - Cairo must be build with with X11 support. Use brew install sethrfore/r-srf/cairo
-  depends_on "sethrfore/r-srf/cairo-x11" => :optional 
+  depends_on "icu4c" => :optional
+  depends_on "libtiff" => :optional
   depends_on "openblas" => :optional
   depends_on "openjdk" => :optional
+  depends_on "sethrfore/extras/tcl-tk-x11" => :optional
+  depends_on "sethrfore/r-srf/cairo-x11" => :optional
   depends_on "texinfo" => :optional
-  depends_on "libtiff" => :optional
-  depends_on "icu4c" => :optional
-  # depends_on "pango" => :optional
-  # depends_on "tcl-tk"
 
   ## Needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin", "lib/R/doc"
@@ -42,43 +36,20 @@ class R < Formula
       ENV["ac_cv_have_decl_clock_gettime"] = "no"
     end
 
-    ## YT - enable tcl-tk support using system headers
-    if MacOS.version >= "10.15" 
-      ## YT - Set up some  environment variables and over-write some variables defined in tclConfig.sh and tkConfig.sh 
-      ENV["TCL_INCLUDE_SPEC"] = "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework/Versions/8.5/Headers"
-      ENV["TK_INCLUDE_SPEC"] = "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
-      ENV["TCLTK_CPPFLAGS"] = "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework/Versions/8.5/Headers \
-                -I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
-      ENV["TCLTK_LIBS"] = "-F#{MacOS.sdk_path}/System/Library/Frameworks -framework Tk \
-               -F#{MacOS.sdk_path}/System/Library/Frameworks -framework Tcl"
-    end
-
-    ## SRF - Add Tex to path, uncomment if mactex is installed and desired
-    # ENV.append_path "PATH", "/Library/TeX/texbin"
-
-    ## YT - If homebrew's tcl-tk is to be used, this line should be uncommented
-    #tcl_lib = Formula["tcl-tk"].opt_lib
-
     # BLAS detection fails with Xcode 12 due to missing prototype
     # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
-    ENV.append "CFLAGS", "-Wno-implicit-function-declaration"    
-    
+    ENV.append "CFLAGS", "-Wno-implicit-function-declaration"
+
     args = [
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
       "--with-x", # SRF - Add X11 support (comment --without-x). Necessary for tcl-tk support.
-      #"--without-x", # YT - If Homebrew's tcl-tk is to be used, '--with-x' cause an error.
       "--with-aqua",
       "--with-lapack",
       "--enable-R-shlib",
       "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
-      "--with-tcltk", # SRF - Add tcl-tk support.
-      "--with-tcl-config=#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework/tclConfig.sh",
-      "--with-tk-config=#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/tkConfig.sh",
-      #"--with-tcl-config=#{tcl_lib}/tclConfig.sh", # YT - If homebrew's tcl-tk is to be used, this line should be uncommented
-      #"--with-tk-config=#{tcl_lib}/tkConfig.sh" # YT - If homebrew's tcl-tk is to be used, this line should be uncommented
     ]
-    
+
     ## SRF - Add supporting flags for optional packages
     if build.with? "openblas"
       args << "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas"
@@ -88,25 +59,28 @@ class R < Formula
       ENV.append_to_cflags "-D__ACCELERATE__" if ENV.compiler != :clang
     end
 
-    if build.with? "openjdk"
-      args << "--enable-java"
+    args << if build.with? "openjdk"
+      "--enable-java"
     else
-      args << "--disable-java"
+      "--disable-java"
     end
 
-    if build.with? "cairo-x11"
-      args << "--with-cairo"
+    if build.with? "tcl-tk-x11"
+      args << "--with-tcltk"
+      args << "--with-tcl-config=#{Formula["tcl-tk-x11"].opt_lib}/tclConfig.sh"
+      args << "--with-tk-config=#{Formula["tcl-tk-x11"].opt_lib}/tkConfig.sh"
     else
-      args << "--without-cairo"
+      args << "--without-tcltk"
     end
 
-    if build.with? "icu4c"
-      ENV.append "CPPFLAGS", "-I#{Formula["icu4c"].opt_include}"
-      ENV.append "LDFLAGS", "-L#{Formula["icu4c"].opt_lib}"
+    args << if build.with? "cairo-x11"
+      "--with-cairo"
+    else
+      "--without-cairo"
     end
 
     # Help CRAN packages find gettext and readline
-    ["gettext", "readline", "xz"].each do |f|
+    %w[gettext readline xz icu4c].each do |f|
       ENV.append "CPPFLAGS", "-I#{Formula[f].opt_include}"
       ENV.append "LDFLAGS", "-L#{Formula[f].opt_lib}"
     end
