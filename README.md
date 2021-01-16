@@ -30,7 +30,7 @@ Check available installation options
 
 Compile the modified R formula from source with desired options
 
-`brew install -s sethrfore/r-srf/r --with-cairo-x11 --tcl-tk-x11`
+`brew install -s sethrfore/r-srf/r --with-cairo-x11 --with-tcl-tk-x11`
 
 Note: If necessary, remove previous R and cairo installations prior to compiling the modified R formula. Once installed, the compiled dependencies can be checked by invoking R and running `capabilities()`.
 
