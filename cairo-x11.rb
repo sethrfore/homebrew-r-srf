@@ -25,7 +25,7 @@ class CairoX11 < Formula
   depends_on "pkg-config" => :build
   depends_on "fontconfig"
   depends_on "freetype"
-  depends_on "glib" => :optional
+  # depends_on "glib" => :optional
   depends_on "libpng"
   depends_on "lzo"
   depends_on "pixman"
@@ -61,16 +61,10 @@ class CairoX11 < Formula
       --enable-fc=yes
     ]
 
-    if build.with? "glib"
-      args << "--enable-gobject=yes"
-    end
-    
-
-    # if build.with? "x11"
-    #   args << "--enable-xcb=yes" << "--enable-xlib=yes" << "--enable-xlib-xrender=yes"
-    # else
-    #   args << "--enable-xcb=no" << "--enable-xlib=no" << "--enable-xlib-xrender=no"
+    # if build.with? "glib"
+    #   args << "--enable-gobject=yes"
     # end
+    
 
     if build.head?
       ENV["NOCONFIGURE"] = "1"
