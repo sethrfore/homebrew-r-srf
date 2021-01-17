@@ -1,4 +1,4 @@
-# homebrew-r-srf
+# Customizable R formula for Homebrew
 
 Custom hombrew r formula. Tcl-Tk support is added by default using the Mac OS system Tcl-Tk framework (see r.rb formula lines 61-63). The formula also provides optional support for the following dependencies: Cairo, IUC, Java, LibTIFF, OpenBLAS, Pango and TexInfo. 
 
@@ -12,9 +12,9 @@ In order for cairo support it is necessary to install a version of cairo with X1
 # Tcl-Tk X11
 An X11 tcl-tk build can be installed via the tcl-tk-x11 formula available [here](https://github.com/sethrfore/homebrew-extras). To install, do as follows:
 
-`brew tap sethrfore/homebrew-extras`
+`brew tap sethrfore/homebrew-r-srf`
 
-`brew install tcl-tk-x11`
+`brew install sethrfore/r-srf/tcl-tk-x11`
 
 # Installation
 
@@ -36,4 +36,4 @@ Note: If necessary, remove previous R and cairo installations prior to compiling
 
 # Note for R Developers
 
-I am open to suggestions on how to improve the functionality of this formula. I am not a programming expert and welcome any tested solutions that enhance the functionality of this formula, specifically with reference to issues related to changes in recent Xcode and CLT deployments. 
+I am open to suggestions on how to improve the functionality of this formula. I am not a programming expert and welcome any tested solutions that enhance the functionality of this formula, specifically with reference to issues related to changes in recent Xcode and CLT deployments.
