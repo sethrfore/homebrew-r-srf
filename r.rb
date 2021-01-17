@@ -121,6 +121,9 @@ class R < Formula
     site_library = HOMEBREW_PREFIX/"lib/R/#{short_version}/site-library"
     site_library.mkpath
     ln_s site_library, lib/"R/site-library"
+
+    ## SRf - R/X11 support deprecation notice
+    opoo "Future R/X11 support deprecation notice.\nSee repository README and/or contribute to the discussion page at:\nhttps://github.com/sethrfore/homebrew-r-srf/discussions/40\n\n"
   end
 
   test do
@@ -132,4 +135,5 @@ class R < Formula
     assert_predicate testpath/"gss/libs/gss.so", :exist?,
                      "Failed to install gss package"
   end
+
 end
