@@ -34,6 +34,10 @@ Compile the modified R formula from source with desired options
 
 Note: If necessary, remove previous R and cairo installations prior to compiling the modified R formula. Once installed, the compiled dependencies can be checked by invoking R and running `capabilities()`.
 
+# R/X11 support deprectation notice
+
+While I won't be immediately deprecating X11 supported R builds, I am currently unlikely to continue maintaining them at some point in the furture. For those affected by this, please refer and post any comments to this [discussion thread](https://github.com/sethrfore/homebrew-r-srf/discussions/40). All notices pertaining changes to R/X11 support will be posted here or in the relevant discussion. 
+
 # Note for R Developers
 
 I am open to suggestions on how to improve the functionality of this formula. I am not a programming expert and welcome any tested solutions that enhance the functionality of this formula, specifically with reference to issues related to changes in recent Xcode and CLT deployments.
