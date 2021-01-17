@@ -22,7 +22,7 @@ class R < Formula
   depends_on "libtiff" => :optional
   depends_on "openblas" => :optional
   depends_on "openjdk" => :optional
-  depends_on "sethrfore/extras/tcl-tk-x11" => :optional
+  depends_on "sethrfore/r-srf/tcl-tk-x11" => :optional
   depends_on "sethrfore/r-srf/cairo-x11" => :optional
   depends_on "texinfo" => :optional
 
