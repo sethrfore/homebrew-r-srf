@@ -6,6 +6,8 @@ class TclTkX11 < Formula
   sha256 "5196dbf6638e3df8d5c87b5815c8c2b758496eb6f0e41446596c9a4e638d87ed"
   license "TCL"
 
+  ## Original formula credited to https://github.com/agiliopadua/homebrew-extras
+
   keg_only "avoid conflics with mac and homebrew tcl-tk installations"
 
   depends_on "libx11"
