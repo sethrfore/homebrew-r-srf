@@ -5,48 +5,29 @@ class R < Formula
   sha256 "09983a8a78d5fb6bc45d27b1c55f9ba5265f78fa54a55c13ae691f87c5bb9e0d"
 
   depends_on "pkg-config" => :build
+  depends_on "fontconfig"
+  depends_on "freetype"
   depends_on "gcc" # for gfortran
   depends_on "gettext"
   depends_on "jpeg"
   depends_on "libpng"
+  depends_on "openblas"
   depends_on "pcre2"
   depends_on "readline"
+  depends_on "tcl-tk"
   depends_on "xz"
 
   ## SRF - Add additional R capabilities (comment out if undesired)
-  ## - X11 necessary for tcl-tk since tk.h includes X11 headers. See section A.2.1 Tcl/Tk at < https://cran.r-project.org/doc/manuals/r-release/R-admin.html >
-  # depends_on :x11
-  depends_on "freetype"
-  depends_on "fontconfig"
-  depends_on "libx11"
-  depends_on "libxt"
-  depends_on "libxext"
-  depends_on "libxmu"
-  depends_on "tcl-tk"
-  ## - Cairo must be build with with X11 support. Use brew install sethrfore/r-srf/cairo
-  depends_on "sethrfore/r-srf/cairo" => :optional 
-  # depends_on "cairo" => :optional 
-  depends_on "openblas" => :optional
-  depends_on "openjdk" => :optional
-  depends_on "texinfo" => :optional
-  depends_on "libtiff" => :optional
-  depends_on "icu4c" => :optional
-  # depends_on "pango" => :optional
-
+  # depends_on "cairo" #=> :optional
+  depends_on "icu4c" #=> :optional
+  depends_on "libtiff" #=> :optional
+  depends_on "openjdk" #=> :optional
+  depends_on "texinfo" #=> :optional
 
   ## Needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin", "lib/R/doc"
 
   def install
-    ## Fix dyld: lazy symbol binding failed: Symbol not found: _clock_gettime
-    if MacOS.version == "10.11" && MacOS::Xcode.installed? &&
-       MacOS::Xcode.version >= "8.0"
-      ENV["ac_cv_have_decl_clock_gettime"] = "no"
-    end
-
-    ## SRF - Necessary for tcltk
-    # ENV.append "LDFLAGS", "-L/usr/local/opt/tcl-tk-x11/lib"
-    # ENV.append "CPPFLAGS","-I/usr/local/opt/tcl-tk-x11/include"    
 
     ## SRF - Add Tex to path, uncomment if mactex is installed and desired
     ENV.append_path "PATH", "/Library/TeX/texbin"
@@ -54,48 +35,26 @@ class R < Formula
     # BLAS detection fails with Xcode 12 due to missing prototype
     # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
     ENV.append "CFLAGS", "-Wno-implicit-function-declaration"
-    
+
     args = [
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
-      # "--with-x", # SRF - Add X11 support (comment --without-x). Necessary for tcl-tk support.
-      "--without-x", # YT - If Homebrew's tcl-tk is to be used, '--with-x' cause an error.
-      "--with-cairo",
-      "--with-aqua",
-      "--with-lapack",
-      "--enable-R-shlib",
-      "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
-      "--with-tcltk", # SRF - Add tcl-tk support.
-      # "--with-tcl-config=/usr/local/opt/tcl-tk-x11/lib/tclConfig.sh",
-      # "--with-tk-config=/usr/local/opt/tcl-tk-x11/lib/tkConfig.sh",
+      "--without-x",
+      "--without-cairo",
+      "--with-tcltk",
       "--with-tcl-config=#{Formula["tcl-tk"].opt_lib}/tclConfig.sh",
       "--with-tk-config=#{Formula["tcl-tk"].opt_lib}/tkConfig.sh",
+      "--with-aqua",
+      "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas",
+      "--enable-R-shlib",
+      "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
     ]
-    
+
     ## SRF - Add supporting flags for optional packages
-    if build.with? "openblas"
-      args << "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas"
-      ENV.append "LDFLAGS", "-L#{Formula["openblas"].opt_lib} -lopenblas"
+    args << if build.with? "openjdk"
+      "--enable-java"
     else
-      args << "--with-blas=-framework Accelerate"
-      ENV.append_to_cflags "-D__ACCELERATE__" if ENV.compiler != :clang
-    end
-
-    if build.with? "openjdk"
-      args << "--enable-java"
-    else
-      args << "--disable-java"
-    end
-
-    if build.with? "cairo"
-      args << "--with-cairo"
-    else
-      args << "--without-cairo"
-    end
-
-    if build.with? "icu4c"
-      ENV.append "CPPFLAGS", "-I#{Formula["icu4c"].opt_include}"
-      ENV.append "LDFLAGS", "-L#{Formula["icu4c"].opt_lib}"
+      "--disable-java"
     end
 
     # Help CRAN packages find gettext and readline
@@ -103,7 +62,6 @@ class R < Formula
       ENV.append "CPPFLAGS", "-I#{Formula[f].opt_include}"
       ENV.append "LDFLAGS", "-L#{Formula[f].opt_lib}"
     end
-    
 
     system "./configure", *args
     system "make"
@@ -146,7 +104,8 @@ class R < Formula
   test do
     assert_equal "[1] 2", shell_output("#{bin}/Rscript -e 'print(1+1)'").chomp
     assert_equal ".dylib", shell_output("#{bin}/R CMD config DYLIB_EXT").chomp
-    assert_equal "[1] \"aqua\"", shell_output("#{bin}/Rscript -e 'library(tcltk)' -e 'tclvalue(.Tcl(\"tk windowingsystem\"))'").chomp
+    assert_equal "[1] \"aqua\"",
+shell_output("#{bin}/Rscript -e 'library(tcltk)' -e 'tclvalue(.Tcl(\"tk windowingsystem\"))'").chomp
 
     system bin/"Rscript", "-e", "install.packages('gss', '.', 'https://cloud.r-project.org')"
     assert_predicate testpath/"gss/libs/gss.so", :exist?,
