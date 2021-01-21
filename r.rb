@@ -35,7 +35,7 @@ class R < Formula
     args = [
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
-      # "--without-x",
+      "--without-x",
       # "--without-cairo",
       "--with-tcltk",
       "--with-tcl-config=#{Formula["tcl-tk"].opt_lib}/tclConfig.sh",
