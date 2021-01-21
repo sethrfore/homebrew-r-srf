@@ -12,23 +12,20 @@ class R < Formula
   depends_on "jpeg"
   depends_on "libpng"
   depends_on "openblas"
+  depends_on "openjdk"
+  depends_on "libtiff"
+  depends_on "icu4c"
+  depends_on "openjdk"
   depends_on "pcre2"
   depends_on "readline"
   depends_on "tcl-tk"
+  depends_on "texinfo"
   depends_on "xz"
-
-  ## SRF - Add additional R capabilities (comment out if undesired)
-  # depends_on "cairo" #=> :optional
-  depends_on "icu4c" #=> :optional
-  depends_on "libtiff" #=> :optional
-  depends_on "openjdk" #=> :optional
-  depends_on "texinfo" #=> :optional
 
   ## Needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin", "lib/R/doc"
 
   def install
-
     ## SRF - Add Tex to path, uncomment if mactex is installed and desired
     ENV.append_path "PATH", "/Library/TeX/texbin"
 
@@ -39,8 +36,8 @@ class R < Formula
     args = [
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
-      "--without-x",
-      "--without-cairo",
+      # "--without-x",
+      # "--without-cairo",
       "--with-tcltk",
       "--with-tcl-config=#{Formula["tcl-tk"].opt_lib}/tclConfig.sh",
       "--with-tk-config=#{Formula["tcl-tk"].opt_lib}/tkConfig.sh",
