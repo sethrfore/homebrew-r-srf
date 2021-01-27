@@ -3,6 +3,8 @@ class R < Formula
   homepage "https://www.r-project.org/"
   url "https://cloud.r-project.org/src/base/R-4/R-4.0.3.tar.gz"
   sha256 "09983a8a78d5fb6bc45d27b1c55f9ba5265f78fa54a55c13ae691f87c5bb9e0d"
+  license "GPL-2.0-or-later"
+  revision 1
 
   depends_on "pkg-config" => :build
   depends_on "fontconfig"
@@ -22,20 +24,14 @@ class R < Formula
   depends_on "libtiff" => :optional
   depends_on "openblas" => :optional
   depends_on "openjdk" => :optional
-  depends_on "sethrfore/r-srf/tcl-tk-x11" => :optional
   depends_on "sethrfore/r-srf/cairo-x11" => :optional
+  depends_on "sethrfore/r-srf/tcl-tk-x11" => :optional
   depends_on "texinfo" => :optional
 
   ## Needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin", "lib/R/doc"
 
   def install
-    ## Fix dyld: lazy symbol binding failed: Symbol not found: _clock_gettime
-    if MacOS.version == "10.11" && MacOS::Xcode.installed? &&
-       MacOS::Xcode.version >= "8.0"
-      ENV["ac_cv_have_decl_clock_gettime"] = "no"
-    end
-
     # BLAS detection fails with Xcode 12 due to missing prototype
     # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
     ENV.append "CFLAGS", "-Wno-implicit-function-declaration"
@@ -45,7 +41,6 @@ class R < Formula
       "--enable-memory-profiling",
       "--with-x", # SRF - Add X11 support (comment --without-x). Necessary for tcl-tk support.
       "--with-aqua",
-      "--with-lapack",
       "--enable-R-shlib",
       "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
     ]
@@ -53,7 +48,7 @@ class R < Formula
     ## SRF - Add supporting flags for optional packages
     if build.with? "openblas"
       args << "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas"
-      ENV.append "LDFLAGS", "-L#{Formula["openblas"].opt_lib} -lopenblas"
+      args << "--with-lapack"
     else
       args << "--with-blas=-framework Accelerate"
       ENV.append_to_cflags "-D__ACCELERATE__" if ENV.compiler != :clang
@@ -135,5 +130,4 @@ class R < Formula
     assert_predicate testpath/"gss/libs/gss.so", :exist?,
                      "Failed to install gss package"
   end
-
 end
