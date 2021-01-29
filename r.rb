@@ -36,12 +36,12 @@ class R < Formula
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
       "--without-x",
-      # "--without-cairo",
       "--with-tcltk",
       "--with-tcl-config=#{Formula["tcl-tk"].opt_lib}/tclConfig.sh",
       "--with-tk-config=#{Formula["tcl-tk"].opt_lib}/tkConfig.sh",
       "--with-aqua",
       "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas",
+      "--with-lapack",
       "--enable-R-shlib",
       "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
     ]
