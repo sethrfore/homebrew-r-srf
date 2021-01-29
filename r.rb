@@ -26,7 +26,7 @@ class R < Formula
 
   def install
     ## SRF - Add Tex to path, uncomment if mactex is installed and desired
-    ENV.append_path "PATH", "/Library/TeX/texbin"
+    # ENV.append_path "PATH", "/Library/TeX/texbin"
 
     # BLAS detection fails with Xcode 12 due to missing prototype
     # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
