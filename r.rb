@@ -59,7 +59,7 @@ class R < Formula
     ["gettext", "readline", "xz"].each do |f|
       ENV.append "CPPFLAGS", "-I#{Formula[f].opt_include}"
       ENV.append "LDFLAGS", "-L#{Formula[f].opt_lib}"
-    end
+    end  
 
     system "./configure", *args
     system "make"
