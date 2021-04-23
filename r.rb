@@ -4,31 +4,34 @@ class R < Formula
   url "https://cran.r-project.org/src/base/R-4/R-4.0.5.tar.gz"
   sha256 "0a3ee079aa772e131fe5435311ab627fcbccb5a50cabc54292e6f62046f1ffef"
   license "GPL-2.0-or-later"
+  revision 2
 
   depends_on "pkg-config" => :build
   depends_on "fontconfig"
   depends_on "freetype"
   depends_on "gcc" # for gfortran
   depends_on "gettext"
-  depends_on "icu4c"
   depends_on "jpeg"
   depends_on "libpng"
-  depends_on "libtiff"
-  depends_on "openblas"
-  depends_on "openjdk" => :optional
+  depends_on "libx11"
+  depends_on "libxext"
+  depends_on "libxmu"
+  depends_on "libxt"
   depends_on "pcre2"
   depends_on "readline"
-  depends_on "tcl-tk"
-  depends_on "texinfo"
   depends_on "xz"
+  depends_on "icu4c" => :optional
+  depends_on "libtiff" => :optional
+  depends_on "openblas" => :optional
+  depends_on "openjdk" => :optional
+  depends_on "sethrfore/r-srf/cairo-x11" => :optional
+  depends_on "sethrfore/r-srf/tcl-tk-x11" => :optional
+  depends_on "texinfo" => :optional
 
   ## Needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin", "lib/R/doc"
 
   def install
-    ## SRF - Add Tex to path, uncomment if mactex is installed and desired
-    # ENV.append_path "PATH", "/Library/TeX/texbin"
-
     # BLAS detection fails with Xcode 12 due to missing prototype
     # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
     ENV.append "CFLAGS", "-Wno-implicit-function-declaration"
@@ -36,22 +39,39 @@ class R < Formula
     args = [
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
-      "--without-x",
-      "--with-tcltk",
-      "--with-tcl-config=#{Formula["tcl-tk"].opt_lib}/tclConfig.sh",
-      "--with-tk-config=#{Formula["tcl-tk"].opt_lib}/tkConfig.sh",
+      "--with-x", # SRF - Add X11 support (comment --without-x). Necessary for tcl-tk support.
       "--with-aqua",
-      "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas",
-      "--with-lapack",
       "--enable-R-shlib",
       "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
     ]
 
     ## SRF - Add supporting flags for optional packages
+    if build.with? "openblas"
+      args << "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas"
+      args << "--with-lapack"
+    else
+      args << "--with-blas=-framework Accelerate"
+      ENV.append_to_cflags "-D__ACCELERATE__" if ENV.compiler != :clang
+    end
+
     args << if build.with? "openjdk"
       "--enable-java"
     else
       "--disable-java"
+    end
+
+    if build.with? "tcl-tk-x11"
+      args << "--with-tcltk"
+      args << "--with-tcl-config=#{Formula["tcl-tk-x11"].opt_lib}/tclConfig.sh"
+      args << "--with-tk-config=#{Formula["tcl-tk-x11"].opt_lib}/tkConfig.sh"
+    else
+      args << "--without-tcltk"
+    end
+
+    args << if build.with? "cairo-x11"
+      "--with-cairo"
+    else
+      "--without-cairo"
     end
 
     # Help CRAN packages find gettext and readline
@@ -104,8 +124,7 @@ class R < Formula
   test do
     assert_equal "[1] 2", shell_output("#{bin}/Rscript -e 'print(1+1)'").chomp
     assert_equal ".dylib", shell_output("#{bin}/R CMD config DYLIB_EXT").chomp
-    assert_equal "[1] \"aqua\"",
-shell_output("#{bin}/Rscript -e 'library(tcltk)' -e 'tclvalue(.Tcl(\"tk windowingsystem\"))'").chomp
+    # assert_equal "[1] \"aqua\"", shell_output("#{bin}/Rscript -e 'library(tcltk)' -e 'tclvalue(.Tcl(\"tk windowingsystem\"))'").chomp
 
     system bin/"Rscript", "-e", "install.packages('gss', '.', 'https://cloud.r-project.org')"
     assert_predicate testpath/"gss/libs/gss.so", :exist?,
