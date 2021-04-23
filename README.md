@@ -1,4 +1,4 @@
-# homebrew-r-srf
+# Customizable R formula for Homebrew
 
 Custom hombrew r formula. Tcl-Tk support is added by default using the Mac OS system Tcl-Tk framework (see r.rb formula lines 61-63). The formula also provides optional support for the following dependencies: Cairo, IUC, Java, LibTIFF, OpenBLAS, Pango and TexInfo. 
 
@@ -6,19 +6,15 @@ Operational X11/Xquartz and macOS Command Line Tools installations are build req
 
 On macOS, Xcode must be installed for the appropriate Tcl-Tk config files to be available. 
 
-# macOS 10.14 (‘Mojave’) Xcode/CLTs 10 users
-For macOS 10.14 (‘Mojave’)and Xcode/CLTs 10 users, an additional step is needed to install the headers in the appropriate locations. From the Terminal run:
+# Cairo X11
+In order for cairo support it is necessary to install a version of cairo with X11 headers. Since the Homebrew core cairo formula no longer supports the `--with-x11` option, a custom cairo formula has been made available in this repository that will support R with cairo device capabilities. If this option is desired and you have a previously installed Homebrew version of cairo, reinstall  using the formula provided here `brew rm cairo && brew install -s sethrfore/r-srf/cairo-x11`. Otherwise `brew install -s sethrfore/r-srf/cairo-x11` should be sufficient. This may neccesitate reinstallation of other formulae depending on cairo. 
 
-`sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /`
+# Tcl-Tk X11
+An X11 tcl-tk build can be installed via the tcl-tk-x11 formula available [here](https://github.com/sethrfore/homebrew-extras). To install, do as follows:
 
-# Tcl-tk and macOS 10.15 (‘Catalina’) Xcode/CLTs 11 users
-Former issues obtaining R tcl-tk functionality appear to have been [resolved](https://github.com/sethrfore/homebrew-r-srf/commit/ad620a62364172971defc685e1b67e2e68b0375c) (thanks to yukio-takeuchi). If problems arise, raise a new issue, provide a detailed description of errors and I'll do my best to address them.
+`brew tap sethrfore/homebrew-r-srf`
 
-# bzip2 and Xcode/CLTs 12.0 users
-For those running Xcode/CLT 12.0 and are experienceing issues pertaining to missing bzip2 headers, install the r formula from the dev-bzip2 branch. This is a temporary patch and will go away. All users with Xcode/CLT 12.1 installed should install from the master formula. To see what Xcode/CLT version you have, run `brew config`.
-
-# Cairo
-In order for cairo support it is necessary to install a version of cairo with X11 headers. Since the Homebrew core cairo formula no longer supports the `--with-x11` option, a custom cairo formula has been made available in this repository that will support R with cairo device capabilities. If this option is desired and you have a previously installed Homebrew version of cairo, reinstall  using the formula provided here `brew rm cairo && brew install -s sethrfore/r-srf/cairo`. Otherwise `brew install -s sethrfore/r-srf/cairo` should be sufficient. This may neccesitate reinstallation of other formulae depending on cairo. 
+`brew install sethrfore/r-srf/tcl-tk-x11`
 
 # Installation
 
@@ -34,10 +30,14 @@ Check available installation options
 
 Compile the modified R formula from source with desired options
 
-`brew install -s sethrfore/r-srf/r --with-cairo --with-libtiff`
+`brew install -s sethrfore/r-srf/r --with-cairo-x11 --with-tcl-tk-x11`
 
 Note: If necessary, remove previous R and cairo installations prior to compiling the modified R formula. Once installed, the compiled dependencies can be checked by invoking R and running `capabilities()`.
 
+# R/X11 support deprectation notice
+
+While I won't be immediately deprecating X11 supported R builds, I am currently unlikely to continue maintaining them at some point in the furture. For those affected by this, please refer and post any comments to this [discussion thread](https://github.com/sethrfore/homebrew-r-srf/discussions/40). All notices pertaining changes to R/X11 support will be posted here or in the relevant discussion. If you have any thoughts, suggestions or concerns surrounding how/when this process will take place, I highly recommend contributing to the discussion. 
+
 # Note for R Developers
 
-I am open to suggestions on how to improve the functionality of this formula. I am not a programming expert and welcome any tested solutions that enhance the functionality of this formula, specifically with reference to issues related to changes in recent Xcode and CLT deployments. 
+I am open to suggestions on how to improve the functionality of this formula. I am not a programming expert and welcome any tested solutions that enhance the functionality of this formula, specifically with reference to issues related to changes in recent Xcode and CLT deployments.
