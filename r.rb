@@ -4,9 +4,10 @@ class R < Formula
   url "https://cran.r-project.org/src/base/R-4/R-4.0.5.tar.gz"
   sha256 "0a3ee079aa772e131fe5435311ab627fcbccb5a50cabc54292e6f62046f1ffef"
   license "GPL-2.0-or-later"
-  revision 
+  revision
 
   depends_on "pkg-config" => :build
+  depends_on "cairo"
   depends_on "fontconfig"
   depends_on "freetype"
   depends_on "gcc" # for gfortran
@@ -59,7 +60,7 @@ class R < Formula
     ["gettext", "readline", "xz"].each do |f|
       ENV.append "CPPFLAGS", "-I#{Formula[f].opt_include}"
       ENV.append "LDFLAGS", "-L#{Formula[f].opt_lib}"
-    end  
+    end
 
     system "./configure", *args
     system "make"
