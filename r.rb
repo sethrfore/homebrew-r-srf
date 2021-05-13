@@ -46,18 +46,12 @@ class R < Formula
       "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas",
       "--with-lapack",
       "--enable-R-shlib",
+      "--enable-java",
       "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
     ]
 
-    ## SRF - Add supporting flags for optional packages
-    args << if build.with? "openjdk"
-      "--enable-java"
-    else
-      "--disable-java"
-    end
-
     # Help CRAN packages find gettext and readline
-    ["gettext", "readline", "xz"].each do |f|
+    ["gettext", "readline", "xz", "icu4c"].each do |f|
       ENV.append "CPPFLAGS", "-I#{Formula[f].opt_include}"
       ENV.append "LDFLAGS", "-L#{Formula[f].opt_lib}"
     end
