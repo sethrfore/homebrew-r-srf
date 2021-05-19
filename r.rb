@@ -44,7 +44,6 @@ class R < Formula
       "--with-tk-config=#{Formula["tcl-tk"].opt_lib}/tkConfig.sh",
       "--with-aqua",
       "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas",
-      "--with-lapack",
       "--enable-R-shlib",
       "--enable-java",
       "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
