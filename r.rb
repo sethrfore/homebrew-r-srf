@@ -75,9 +75,15 @@ class R < Formula
     end
 
     # Help CRAN packages find gettext and readline
-    %w[gettext readline xz icu4c].each do |f|
+    %w[gettext readline xz].each do |f|
       ENV.append "CPPFLAGS", "-I#{Formula[f].opt_include}"
       ENV.append "LDFLAGS", "-L#{Formula[f].opt_lib}"
+    end
+
+    # Help CRAN packages find icu4c only if selected as install option
+    if build.with? "icu4c"
+      ENV.append "CPPFLAGS", "-I#{Formula["icu4c"].opt_include}"
+      ENV.append "LDFLAGS", "-L#{Formula["icu4c"].opt_lib}"
     end
 
     system "./configure", *args
