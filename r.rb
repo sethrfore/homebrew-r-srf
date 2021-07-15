@@ -50,7 +50,7 @@ class R < Formula
     ]
 
     # Help CRAN packages find gettext and readline
-    ["gettext", "readline", "xz", "icu4c"].each do |f|
+    %w[gettext readline xz icu4c].each do |f|
       ENV.append "CPPFLAGS", "-I#{Formula[f].opt_include}"
       ENV.append "LDFLAGS", "-L#{Formula[f].opt_lib}"
     end
