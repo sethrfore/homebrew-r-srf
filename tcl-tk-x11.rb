@@ -1,9 +1,9 @@
 class TclTkX11 < Formula
   desc "Tool Command Language"
   homepage "https://www.tcl-lang.org"
-  url "https://downloads.sourceforge.net/project/tcl/Tcl/8.6.10/tcl8.6.10-src.tar.gz"
-  mirror "https://ftp.osuosl.org/pub/blfs/conglomeration/tcl/tcl8.6.10-src.tar.gz"
-  sha256 "5196dbf6638e3df8d5c87b5815c8c2b758496eb6f0e41446596c9a4e638d87ed"
+  url "https://downloads.sourceforge.net/project/tcl/Tcl/8.6.12/tcl8.6.12-src.tar.gz"
+  mirror "https://fossies.org/linux/misc/tcl8.6.12-src.tar.gz"
+  sha256 "26c995dd0f167e48b11961d891ee555f680c175f7173ff8cb829f4ebcde4c1a6"
   license "TCL"
 
   ## Original formula credited to https://github.com/agiliopadua/homebrew-extras
@@ -13,14 +13,14 @@ class TclTkX11 < Formula
   depends_on "libx11"
 
   resource "tk" do
-    url "https://downloads.sourceforge.net/project/tcl/Tcl/8.6.10/tk8.6.10-src.tar.gz"
-    mirror "https://fossies.org/linux/misc/tk8.6.10-src.tar.gz"
-    sha256 "63df418a859d0a463347f95ded5cd88a3dd3aaa1ceecaeee362194bc30f3e386"
+    url "https://downloads.sourceforge.net/project/tcl/Tcl/8.6.12/tk8.6.12-src.tar.gz"
+    mirror "https://fossies.org/linux/misc/tk8.6.12-src.tar.gz"
+    sha256 "12395c1f3fcb6bed2938689f797ea3cdf41ed5cb6c4766eec8ac949560310630"
   end
 
   resource "critcl" do
-    url "https://github.com/andreas-kupries/critcl/archive/3.1.18.tar.gz"
-    sha256 "6fb0263cc8dfb787ab162ae130570c19f665a03229b8a046ec1c11809c2ff70e"
+    url "https://github.com/andreas-kupries/critcl/archive/3.1.18.1.tar.gz"
+    sha256 "51bc4b099ecf59ba3bada874fc8e1611279dfd30ad4d4074257084763c49fd86"
   end
 
   resource "tcllib" do
