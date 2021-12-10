@@ -19,6 +19,7 @@ class R < Formula
   depends_on "libtiff"
   depends_on "openblas"
   depends_on "openjdk"
+  depends_on "pango"
   depends_on "pcre2"
   depends_on "readline"
   depends_on "tcl-tk"
@@ -55,7 +56,7 @@ class R < Formula
       "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas",
       "--enable-R-shlib",
       "--enable-java",
-      "--with-cairo"
+      "--with-cairo",
     ]
 
     if OS.mac?
