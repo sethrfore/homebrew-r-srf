@@ -12,7 +12,7 @@ class R < Formula
   depends_on "freetype"
   depends_on "gcc" # for gfortran
   depends_on "gettext"
-  depends_on "icu4c"
+  # depends_on "icu4c"
   depends_on "jpeg"
   depends_on "libffi"
   depends_on "libpng"
@@ -27,6 +27,7 @@ class R < Formula
   depends_on "xz"
 
   uses_from_macos "curl"
+  uses_from_macos "icu4c"
 
   on_linux do
     depends_on "pango"
@@ -77,7 +78,7 @@ class R < Formula
     end
 
     # Help CRAN packages find gettext and readline
-    %w[gettext readline xz icu4c].each do |f|
+    ["gettext", "readline", "xz"].each do |f|
       ENV.append "CPPFLAGS", "-I#{Formula[f].opt_include}"
       ENV.append "LDFLAGS", "-L#{Formula[f].opt_lib}"
     end
