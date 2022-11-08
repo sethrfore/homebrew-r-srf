@@ -18,7 +18,7 @@ class R < Formula
   depends_on "gcc" # for gfortran
   depends_on "gettext"
   # depends_on "icu4c"
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
   # depends_on "libffi"
   depends_on "libpng"
   depends_on "libtiff"
