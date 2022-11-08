@@ -4,7 +4,7 @@ class R < Formula
   url "https://cran.r-project.org/src/base/R-4/R-4.2.2.tar.gz"
   sha256 "0ff62b42ec51afa5713caee7c4fde7a0c45940ba39bef8c5c9487fef0c953df5"
   license "GPL-2.0-or-later"
-  # revision 1
+  revision 1
 
   livecheck do
     url "https://cran.rstudio.com/banner.shtml"
@@ -19,7 +19,7 @@ class R < Formula
   depends_on "gettext"
   # depends_on "icu4c"
   depends_on "jpeg"
-  depends_on "libffi"
+  # depends_on "libffi"
   depends_on "libpng"
   depends_on "libtiff"
   depends_on "openblas"
@@ -58,6 +58,13 @@ class R < Formula
     # BLAS detection fails with Xcode 12 due to missing prototype
     # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
     ENV.append "CFLAGS", "-Wno-implicit-function-declaration"
+
+    # Set SDK 12 to avoid errors with XQuartz
+    # ENV.store "CMAKE_LIBRARY_PATH", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
+    # ENV.store "CMAKE_INCLUDE_PATH", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
+    ENV.store "HOMEBREW_SDKROOT", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk"
+    # ENV.store "HOMEBREW_ISYSTEM_PATHS", "/usr/local/include:/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
+    # ENV.store "HOMEBREW_LIBRARY_PATHS", "/usr/local/lib:/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
 
     args = [
       "--prefix=#{prefix}",
