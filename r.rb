@@ -60,11 +60,11 @@ class R < Formula
     ENV.append "CFLAGS", "-Wno-implicit-function-declaration"
 
     # Set SDK 12 to avoid errors with XQuartz
-    # ENV.store "CMAKE_LIBRARY_PATH", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
-    # ENV.store "CMAKE_INCLUDE_PATH", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
+    ENV.store "CMAKE_LIBRARY_PATH", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
+    ENV.store "CMAKE_INCLUDE_PATH", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
     ENV.store "HOMEBREW_SDKROOT", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk"
-    # ENV.store "HOMEBREW_ISYSTEM_PATHS", "/usr/local/include:/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
-    # ENV.store "HOMEBREW_LIBRARY_PATHS", "/usr/local/lib:/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
+    ENV.store "HOMEBREW_ISYSTEM_PATHS", "/usr/local/include:/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
+    ENV.store "HOMEBREW_LIBRARY_PATHS", "/usr/local/lib:/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
 
     args = [
       "--prefix=#{prefix}",
