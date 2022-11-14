@@ -36,7 +36,7 @@ Note: If necessary, remove previous R and cairo installations prior to compiling
 
 # R/X11 support deprectation notice
 
-While I won't be immediately deprecating X11 supported R builds, I am currently unlikely to continue maintaining them at some point in the furture. For those affected by this, please refer and post any comments to this [discussion thread](https://github.com/sethrfore/homebrew-r-srf/discussions/40). All notices pertaining changes to R/X11 support will be posted here or in the relevant discussion. If you have any thoughts, suggestions or concerns surrounding how/when this process will take place, I highly recommend contributing to the discussion. 
+While I won't be immediately deprecating X11 supported R builds, I am currently unlikely to continue maintaining them at some point in the future. For those affected by this, please refer and post any comments to this [discussion thread](https://github.com/sethrfore/homebrew-r-srf/discussions/40). All notices pertaining changes to R/X11 support will be posted here or in the relevant discussion. If you have any thoughts, suggestions or concerns surrounding how/when this process will take place, I highly recommend contributing to the discussion. 
 
 # Note for R Developers
 
