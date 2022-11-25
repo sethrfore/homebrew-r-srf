@@ -36,11 +36,11 @@ class R < Formula
   uses_from_macos "libffi", since: :catalina
 
   on_linux do
-    depends_on "pango"
     depends_on "libice"
+    depends_on "libtirpc"
     depends_on "libx11"
     depends_on "libxt"
-    depends_on "libtirpc"
+    depends_on "pango"
   end
 
   ## Needed to preserve executable permissions on files without shebangs
@@ -155,7 +155,7 @@ class R < Formula
                      "Failed to install gss package"
 
     winsys = "[1] \"aqua\""
-    on_linux do
+    if OS.linux?
       # Fails in Linux CI with: no DISPLAY variable so Tk is not available
       return if ENV["HOMEBREW_GITHUB_ACTIONS"]
 
