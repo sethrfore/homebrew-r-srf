@@ -36,6 +36,8 @@ class Cairo < Formula
   depends_on "glib"
   depends_on "libpng"
   depends_on "libx11"
+  depends_on "libxt"  #SRF
+  depends_on "ghostscript"  #SRF
   depends_on "libxcb"
   depends_on "libxext"
   depends_on "libxrender"
