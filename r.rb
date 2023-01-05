@@ -33,6 +33,8 @@ class R < Formula
 
   uses_from_macos "curl"
   uses_from_macos "icu4c"
+  uses_from_macos "libxml2"
+  uses_from_macos "expat"
   uses_from_macos "libffi", since: :catalina
 
   on_linux do
