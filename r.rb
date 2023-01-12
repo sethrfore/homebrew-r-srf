@@ -20,7 +20,7 @@ class R < Formula
   depends_on "pcre2"
   depends_on "readline"
   depends_on "xz"
-  depends_on "icu4c" => :optional
+  # depends_on "icu4c" => :optional
   depends_on "libtiff" => :optional
   depends_on "openblas" => :optional
   depends_on "openjdk" => :optional
@@ -28,19 +28,39 @@ class R < Formula
   depends_on "sethrfore/r-srf/tcl-tk-x11" => :optional
   depends_on "texinfo" => :optional
 
+  uses_from_macos "curl"
+  uses_from_macos "icu4c"
+  uses_from_macos "libffi", since: :catalina
+
+  on_linux do
+    depends_on "libice"
+    depends_on "libtirpc"
+    depends_on "libx11"
+    depends_on "libxt"
+    depends_on "pango"
+  end
+
   ## Needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin", "lib/R/doc"
+
+  fails_with :gcc do
+    version "11"
+    cause "Unknown. FIXME."
+  end
+
+  # Patch to fix build on macOS Ventura, remove in next release
+  # https://bugs.r-project.org/show_bug.cgi?id=18426
+  patch do
+    on_ventura :or_newer do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/d647f4e1d61c8dba5f15edf7a0fc567f681641fb/r/ventura.diff"
+      sha256 "0b3c230432ef6a9231eaf48f39fd22155d3e1c7cd4f2a497e96ff4bdc7d91b84"
+    end
+  end
 
   def install
     # BLAS detection fails with Xcode 12 due to missing prototype
     # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
     ENV.append "CFLAGS", "-Wno-implicit-function-declaration"
-    # Set SDK 12 to avoid errors with XQuartz
-    ENV.store "CMAKE_LIBRARY_PATH", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
-    ENV.store "CMAKE_INCLUDE_PATH", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
-    ENV.store "HOMEBREW_SDKROOT", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk"
-    ENV.store "HOMEBREW_ISYSTEM_PATHS", "/usr/local/include:/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
-    ENV.store "HOMEBREW_LIBRARY_PATHS", "/usr/local/lib:/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
 
     args = [
       "--prefix=#{prefix}",
@@ -48,7 +68,8 @@ class R < Formula
       "--with-x", # SRF - Add X11 support (comment --without-x). Necessary for tcl-tk support.
       "--with-aqua",
       "--enable-R-shlib",
-      "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
+      # "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
+      "FC=#{Formula["gcc"].opt_bin}/gfortran",
     ]
 
     ## SRF - Add supporting flags for optional packages
@@ -86,12 +107,6 @@ class R < Formula
       ENV.append "LDFLAGS", "-L#{Formula[f].opt_lib}"
     end
 
-    # Help CRAN packages find icu4c only if selected as install option
-    if build.with? "icu4c"
-      ENV.append "CPPFLAGS", "-I#{Formula["icu4c"].opt_include}"
-      ENV.append "LDFLAGS", "-L#{Formula["icu4c"].opt_lib}"
-    end
-
     system "./configure", *args
     system "make"
     ENV.deparallelize do
@@ -118,8 +133,10 @@ class R < Formula
     lib.install_symlink Dir[r_home/"lib/*"]
 
     # avoid triggering mandatory rebuilds of r when gcc is upgraded
+    check_replace = OS.mac?
     inreplace lib/"R/etc/Makeconf", Formula["gcc"].prefix.realpath,
-                                    Formula["gcc"].opt_prefix
+                                    Formula["gcc"].opt_prefix,
+                                    check_replace
   end
 
   def post_install
@@ -135,11 +152,20 @@ class R < Formula
 
   test do
     assert_equal "[1] 2", shell_output("#{bin}/Rscript -e 'print(1+1)'").chomp
-    assert_equal ".dylib", shell_output("#{bin}/R CMD config DYLIB_EXT").chomp
-    # assert_equal "[1] \"aqua\"", shell_output("#{bin}/Rscript -e 'library(tcltk)' -e 'tclvalue(.Tcl(\"tk windowingsystem\"))'").chomp
+    assert_equal shared_library(""), shell_output("#{bin}/R CMD config DYLIB_EXT").chomp
+    system bin/"Rscript", "-e", "if(!capabilities('cairo')) stop('cairo not available')"
 
     system bin/"Rscript", "-e", "install.packages('gss', '.', 'https://cloud.r-project.org')"
     assert_predicate testpath/"gss/libs/gss.so", :exist?,
                      "Failed to install gss package"
+
+    winsys = "[1] \"aqua\""
+    if OS.linux?
+      return if ENV["HOMEBREW_GITHUB_ACTIONS"]
+
+      winsys = "[1] \"x11\""
+    end
+    assert_equal winsys,
+                 shell_output("#{bin}/Rscript -e 'library(tcltk)' -e 'tclvalue(.Tcl(\"tk windowingsystem\"))'").chomp
   end
 end
