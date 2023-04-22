@@ -1,8 +1,8 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-4/R-4.2.2.tar.gz"
-  sha256 "0ff62b42ec51afa5713caee7c4fde7a0c45940ba39bef8c5c9487fef0c953df5"
+  url "https://cran.r-project.org/src/base/R-4/R-4.3.0.tar.gz"
+  sha256 "45dcc48b6cf27d361020f77fde1a39209e997b81402b3663ca1c010056a6a609"
   license "GPL-2.0-or-later"
   revision 1
 
@@ -53,15 +53,6 @@ class R < Formula
     cause "Unknown. FIXME."
   end
 
-  # Patch to fix build on macOS Ventura, remove in next release
-  # https://bugs.r-project.org/show_bug.cgi?id=18426
-  patch do
-    on_ventura :or_newer do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/d647f4e1d61c8dba5f15edf7a0fc567f681641fb/r/ventura.diff"
-      sha256 "0b3c230432ef6a9231eaf48f39fd22155d3e1c7cd4f2a497e96ff4bdc7d91b84"
-    end
-  end
-
   def install
     ## SRF - Add Tex to path, uncomment if mactex is installed and desired
     ENV.append_path "PATH", "/Library/TeX/texbin"
@@ -69,13 +60,6 @@ class R < Formula
     # BLAS detection fails with Xcode 12 due to missing prototype
     # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
     ENV.append "CFLAGS", "-Wno-implicit-function-declaration"
-
-    # Set SDK 12 to avoid errors with XQuartz
-    # ENV.store "CMAKE_LIBRARY_PATH", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
-    # ENV.store "CMAKE_INCLUDE_PATH", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
-    # ENV.store "HOMEBREW_SDKROOT", "/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk"
-    # ENV.store "HOMEBREW_ISYSTEM_PATHS", "/usr/local/include:/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
-    # ENV.store "HOMEBREW_LIBRARY_PATHS", "/usr/local/lib:/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
 
     args = [
       "--prefix=#{prefix}",
