@@ -1,10 +1,9 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-4/R-4.3.1.tar.gz"
-  sha256 "8dd0bf24f1023c6f618c3b317383d291b4a494f40d73b983ac22ffea99e4ba99"
+  url "https://cran.r-project.org/src/base/R-4/R-4.3.2.tar.gz"
+  sha256 "b3f5760ac2eee8026a3f0eefcb25b47723d978038eee8e844762094c860c452a"
   license "GPL-2.0-or-later"
-  revision 1
 
   livecheck do
     url "https://cran.rstudio.com/banner.shtml"
@@ -157,7 +156,6 @@ class R < Formula
 
     winsys = "[1] \"aqua\""
     if OS.linux?
-      # Fails in Linux CI with: no DISPLAY variable so Tk is not available
       return if ENV["HOMEBREW_GITHUB_ACTIONS"]
 
       winsys = "[1] \"x11\""
