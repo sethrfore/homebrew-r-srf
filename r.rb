@@ -1,10 +1,9 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-4/R-4.3.0.tar.gz"
-  sha256 "45dcc48b6cf27d361020f77fde1a39209e997b81402b3663ca1c010056a6a609"
+  url "https://cran.r-project.org/src/base/R-4/R-4.3.3.tar.gz"
+  sha256 "80851231393b85bf3877ee9e39b282e750ed864c5ec60cbd68e6e139f0520330"
   license "GPL-2.0-or-later"
-  revision 1
 
   depends_on "pkg-config" => :build
   depends_on "fontconfig"
@@ -49,9 +48,9 @@ class R < Formula
   end
 
   def install
-    # BLAS detection fails with Xcode 12 due to missing prototype
-    # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
-    ENV.append "CFLAGS", "-Wno-implicit-function-declaration"
+    # `configure` doesn't like curl 8+, but convince it that everything is ok.
+    # TODO: report this upstream.
+    ENV["r_cv_have_curl728"] = "yes"
 
     args = [
       "--prefix=#{prefix}",
@@ -131,11 +130,13 @@ class R < Formula
   end
 
   def post_install
-    short_version =
-      `#{bin}/Rscript -e 'cat(as.character(getRversion()[1,1:2]))'`.strip
-    site_library = HOMEBREW_PREFIX/"lib/R/#{short_version}/site-library"
+    short_version = Utils.safe_popen_read(bin/"Rscript", "-e", "cat(as.character(getRversion()[1,1:2]))")
+    site_library = HOMEBREW_PREFIX/"lib/R"/short_version/"site-library"
     site_library.mkpath
-    ln_s site_library, lib/"R/site-library"
+    touch site_library/".keepme"
+    site_library_cellar = lib/"R/site-library"
+    site_library_cellar.unlink if site_library_cellar.exist?
+    site_library_cellar.parent.install_symlink site_library
 
     ## SRf - R/X11 support deprecation notice
     opoo "Future R/X11 support deprecation notice.\nSee repository README and/or contribute to the discussion page at:\nhttps://github.com/sethrfore/homebrew-r-srf/discussions/40\n\n"
@@ -157,6 +158,6 @@ class R < Formula
       winsys = "[1] \"x11\""
     end
     assert_equal winsys,
-                 shell_output("#{bin}/Rscript -e 'library(tcltk)' -e 'tclvalue(.Tcl(\"tk windowingsystem\"))'").chomp
+                 shell_output("#{bin}/Rscript -e 'library(tcltk)' -e 'tclvalue(.Tcl(\"tk windowingsystem\"))'").cho
   end
 end
