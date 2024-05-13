@@ -1,9 +1,10 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-4/R-4.3.3.tar.gz"
-  sha256 "80851231393b85bf3877ee9e39b282e750ed864c5ec60cbd68e6e139f0520330"
+  url "https://cran.r-project.org/src/base/R-4/R-4.4.0.tar.gz"
+  sha256 "ace4125f9b976d2c53bcc5fca30c75e30d4edc401584859cbadb080e72b5f030"
   license "GPL-2.0-or-later"
+  revision 1
 
   livecheck do
     url "https://cran.rstudio.com/banner.shtml"
