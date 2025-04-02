@@ -1,10 +1,10 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-4/R-4.4.2.tar.gz"
-  sha256 "1578cd603e8d866b58743e49d8bf99c569e81079b6a60cf33cdf7bdffeb817ec"
+  url "https://cran.r-project.org/src/base/R-4/R-4.4.3.tar.gz"
+  sha256 "0d93d224442dea253c2b086f088db6d0d3cfd9b592cd5496e8cb2143e90fc9e8"
   license "GPL-2.0-or-later"
-  revision 2
+  revision 1
 
   livecheck do
     url "https://cran.rstudio.com/banner.shtml"
@@ -36,7 +36,7 @@ class R < Formula
 
   uses_from_macos "bzip2"
   uses_from_macos "curl"
-  uses_from_macos "icu4c"
+  # uses_from_macos "icu4c"
   uses_from_macos "libffi", since: :catalina
   uses_from_macos "zlib"
 
@@ -49,11 +49,15 @@ class R < Formula
     depends_on "libxdmcp"
     depends_on "libxrender"
     depends_on "pixman"
-    depends_on "icu4c@76"
+    depends_on "icu4c@77"
   end
 
   on_linux do
+    depends_on "glib"
+    depends_on "harfbuzz"
+    depends_on "icu4c@77"
     depends_on "libice"
+    depends_on "libsm"
     depends_on "libtirpc"
     depends_on "libx11"
     depends_on "libxt"
@@ -63,10 +67,6 @@ class R < Formula
   ## Needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin", "lib/R/doc"
 
-  fails_with :gcc do
-    version "11"
-    cause "Unknown. FIXME."
-  end
 
   def install
     ## SRF - Add Tex to path, uncomment if mactex is installed and desired
@@ -121,11 +121,16 @@ class R < Formula
       system "make", "install"
     end
 
-    cd "src/nmath/standalone" do
-      system "make"
-      ENV.deparallelize do
-        system "make", "install"
-      end
+    # cd "src/nmath/standalone" do
+    #   system "make"
+    #   ENV.deparallelize do
+    #     system "make", "install"
+    #   end
+    # end
+
+    system "make", "-C", "src/nmath/standalone"
+    ENV.deparallelize do
+      system "make", "-C", "src/nmath/standalone", "install"
     end
 
     r_home = lib/"R"
@@ -162,8 +167,7 @@ class R < Formula
     system bin/"Rscript", "-e", "if(!capabilities('cairo')) stop('cairo not available')"
 
     system bin/"Rscript", "-e", "install.packages('gss', '.', 'https://cloud.r-project.org')"
-    assert_predicate testpath/"gss/libs/gss.so", :exist?,
-                     "Failed to install gss package"
+    assert_path_exists testpath/"gss/libs/gss.so", "Failed to install gss package"
 
     winsys = "[1] \"aqua\""
     if OS.linux?
