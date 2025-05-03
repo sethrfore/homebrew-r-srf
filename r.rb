@@ -1,17 +1,21 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-4/R-4.4.3.tar.gz"
-  sha256 "0d93d224442dea253c2b086f088db6d0d3cfd9b592cd5496e8cb2143e90fc9e8"
+  ## SRF - R 4.5.0 currently does not install properly, using patched version below
+  # url "https://cran.r-project.org/src/base/R-4/R-4.5.0.tar.gz"
+  # sha256 "3b33ea113e0d1ddc9793874d5949cec2c7386f66e4abfb1cef9aec22846c3ce1"
+  url "https://cran.r-project.org/src/base-prerelease/R-patched.tar.gz"
+  sha256 "0d08b773ebd36bca0f71e11bdb3cbd9ff2b966c48fb3b2c5b7e0776802cd79bf"
+  version "4.5.0p"
   license "GPL-2.0-or-later"
-  revision 1
 
   livecheck do
     url "https://cran.rstudio.com/banner.shtml"
     regex(%r{href=(?:["']?|.*?/)R[._-]v?(\d+(?:\.\d+)+)\.t}i)
   end
 
-  depends_on "pkg-config" => :build
+  # depends_on "pkg-config" => :build
+  depends_on "pkgconf" => :build
   depends_on "cairo"
   depends_on "gcc" # for gfortran
   depends_on "gettext"
@@ -27,16 +31,10 @@ class R < Formula
   depends_on "tcl-tk@8"
   depends_on "texinfo"
   depends_on "xz"
-
-  # uses_from_macos "curl"
-  # uses_from_macos "icu4c"
-  # uses_from_macos "libxml2"
-  # uses_from_macos "expat"
-  # uses_from_macos "libffi", since: :catalina
+  depends_on "zstd"
 
   uses_from_macos "bzip2"
   uses_from_macos "curl"
-  # uses_from_macos "icu4c"
   uses_from_macos "libffi", since: :catalina
   uses_from_macos "zlib"
 
