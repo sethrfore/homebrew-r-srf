@@ -1,14 +1,9 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-4/R-4.5.0.tar.gz"
-  sha256 "3b33ea113e0d1ddc9793874d5949cec2c7386f66e4abfb1cef9aec22846c3ce1"
-  ## SRF - R 4.5.0 currently does not install properly, using patched version below
-  # url "https://cran.r-project.org/src/base-prerelease/R-patched.tar.gz"
-  # sha256 "0d08b773ebd36bca0f71e11bdb3cbd9ff2b966c48fb3b2c5b7e0776802cd79bf"
-  # version "4.5.0p"
+  url "https://cran.r-project.org/src/base/R-4/R-4.5.1.tar.gz"
+  sha256 "b42a7921400386645b10105b91c68728787db5c4c83c9f6c30acdce632e1bb70"
   license "GPL-2.0-or-later"
-  revision 1
 
   livecheck do
     url "https://cran.rstudio.com/banner.shtml"
@@ -181,28 +176,3 @@ class R < Formula
                  shell_output("#{bin}/Rscript -e 'library(tcltk)' -e 'tclvalue(.Tcl(\"tk windowingsystem\"))'").chomp
   end
 end
-__END__
-diff -pur R-4.5.0/src/nmath/mlutils.c R-4.5.0-patched/src/nmath/mlutils.c
---- R-4.5.0/src/nmath/mlutils.c 2025-03-14 00:02:15
-+++ R-4.5.0-patched/src/nmath/mlutils.c 2025-05-24 12:16:15
-@@ -105,7 +105,20 @@ double R_pow_di(double x, int n)
-     return pow;
- }
-
-+/* It is not clear why these are being defined in standalone nmath:
-+ * but that they are is stated in the R-admin manual.
-+ *
-+ * In R NA_AREAL is a specific NaN computed during initialization.
-+ */
-+#if defined(__clang__) && defined(NAN)
-+// C99 (optionally) has NAN, which is a float but will coerce to double.
-+double NA_REAL = NAN;
-+#else
-+// ML_NAN is defined as (0.0/0.0) in nmath.h
-+// Fails to compile in Intel ics 2025.0, Apple clang 17, LLVM clang 20
- double NA_REAL = ML_NAN;
-+#endif
-+
- double R_PosInf = ML_POSINF, R_NegInf = ML_NEGINF;
-
- #include <stdio.h>
