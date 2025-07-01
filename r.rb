@@ -61,10 +61,6 @@ class R < Formula
   ## Needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin", "lib/R/doc"
 
-  # Fix build with clang 17
-  # https://github.com/wch/r-source/commit/489a6b8d330bb30da82329f1949f44a0f633f1e8
-  patch :DATA
-
   def install
     ## SRF - Add Tex to path, uncomment if mactex is installed and desired
     ENV.append_path "PATH", "/Library/TeX/texbin"
