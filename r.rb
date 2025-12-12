@@ -1,9 +1,10 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-4/R-4.5.1.tar.gz"
-  sha256 "b42a7921400386645b10105b91c68728787db5c4c83c9f6c30acdce632e1bb70"
+  url "https://cran.r-project.org/src/base/R-4/R-4.5.2.tar.gz"
+  sha256 "0d71ff7106ec69cd7c67e1e95ed1a3cee355880931f2eb78c530014a9e379f20"
   license "GPL-2.0-or-later"
+  revision 1
 
   livecheck do
     url "https://cran.rstudio.com/banner.shtml"
@@ -24,14 +25,14 @@ class R < Formula
   depends_on "pango"
   depends_on "pcre2"
   depends_on "readline"
-  depends_on "tcl-tk@8"
+  depends_on "tcl-tk"
   depends_on "texinfo"
   depends_on "xz"
   depends_on "zstd"
 
   uses_from_macos "bzip2"
   uses_from_macos "curl"
-  uses_from_macos "libffi", since: :catalina
+  uses_from_macos "libffi"
   uses_from_macos "zlib"
 
   on_macos do
@@ -43,13 +44,13 @@ class R < Formula
     depends_on "libxdmcp"
     depends_on "libxrender"
     depends_on "pixman"
-    depends_on "icu4c@77"
+    depends_on "icu4c@78"
   end
 
   on_linux do
     depends_on "glib"
     depends_on "harfbuzz"
-    depends_on "icu4c@77"
+    depends_on "icu4c@78"
     depends_on "libice"
     depends_on "libsm"
     depends_on "libtirpc"
@@ -73,8 +74,8 @@ class R < Formula
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
       "--with-tcltk",
-      "--with-tcl-config=#{Formula["tcl-tk@8"].opt_lib}/tclConfig.sh",
-      "--with-tk-config=#{Formula["tcl-tk@8"].opt_lib}/tkConfig.sh",
+      "--with-tcl-config=#{Formula["tcl-tk"].opt_lib}/tclConfig.sh",
+      "--with-tk-config=#{Formula["tcl-tk"].opt_lib}/tkConfig.sh",
       "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas",
       "--enable-R-shlib",
       "--enable-java",
@@ -113,13 +114,6 @@ class R < Formula
     ENV.deparallelize do
       system "make", "install"
     end
-
-    # cd "src/nmath/standalone" do
-    #   system "make"
-    #   ENV.deparallelize do
-    #     system "make", "install"
-    #   end
-    # end
 
     system "make", "-C", "src/nmath/standalone"
     ENV.deparallelize do
