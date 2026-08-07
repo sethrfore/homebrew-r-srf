@@ -1,10 +1,9 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-4/R-4.6.0.tar.gz"
-  sha256 "b8dc9b4543660c7b596b87938df532394350360976527d344228ee0ed12e45ec"
+  url "https://cran.r-project.org/src/base/R-4/R-4.6.1.tar.gz"
+  sha256 "4da6e61d2c0aac5f14a2e7e432cb5fcc269efe83da4293050ba7f03dff4e2cf4"
   license "GPL-2.0-or-later"
-  revision 1
   compatibility_version 2
 
   livecheck do
@@ -12,7 +11,6 @@ class R < Formula
     regex(%r{href=(?:["']?|.*?/)R[._-]v?(\d+(?:\.\d+)+)\.t}i)
   end
 
-  # depends_on "pkg-config" => :build
   depends_on "pkgconf" => :build
   depends_on "cairo"
   depends_on "gcc" # for gfortran
@@ -60,8 +58,9 @@ class R < Formula
     depends_on "pango"
   end
 
-  ## Needed to preserve executable permissions on files without shebangs
+  # needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin", "lib/R/doc"
+  skip_clean "lib/R/site-library"
 
   def install
     ## SRF - Add Tex to path, uncomment if mactex is installed and desired
@@ -139,6 +138,7 @@ class R < Formula
                                     audit_result: OS.mac?
   end
 
+  # SRF - Keep post_install (Homebrew moved to inside binary otherwise `r` doesn't link to executable)
   def post_install
     short_version = Utils.safe_popen_read(bin/"Rscript", "-e", "cat(as.character(getRversion()[1,1:2]))")
     site_library = HOMEBREW_PREFIX/"lib/R"/short_version/"site-library"
