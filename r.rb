@@ -34,6 +34,7 @@ class R < Formula
   uses_from_macos "zlib"
 
   on_macos do
+    depends_on "brotli"
     depends_on "fontconfig"
     depends_on "freetype"
     depends_on "gettext"
@@ -43,13 +44,13 @@ class R < Formula
     depends_on "libxext"
     depends_on "libxrender"
     depends_on "pixman"
-    depends_on "icu4c@78"
+    depends_on "icu4c@79"
   end
 
   on_linux do
     depends_on "glib"
     depends_on "harfbuzz"
-    depends_on "icu4c@78"
+    depends_on "icu4c@79"
     depends_on "libice"
     depends_on "libsm"
     depends_on "libtirpc"
